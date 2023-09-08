@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace ObjViewer.Parser.Types
             ValidateInputData(data);
 
             ParseAndSetValues(data);
+        }
+
+        protected bool TryParseFloat(string value, out float result)
+        {
+            return float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
         }
     }
 }

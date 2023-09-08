@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.Numerics;
 
 namespace ObjViewer.Parser.Types
 {
     public class Vertex : Type
     {
 
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
-        public double W { get; set; } = 1.0;
+        public Vector4 Coordinates { get; set; }
         public int Index { get; set; }
 
         public Vertex()
@@ -20,26 +18,26 @@ namespace ObjViewer.Parser.Types
 
         protected override void ParseAndSetValues(string[] data)
         {
-            if (!double.TryParse(data[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double x) ||
-                !double.TryParse(data[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double y) ||
-                !double.TryParse(data[3], NumberStyles.Any, CultureInfo.InvariantCulture, out double z))
+            if (!float.TryParse(data[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float x) ||
+                !float.TryParse(data[2], NumberStyles.Any, CultureInfo.InvariantCulture, out float y) ||
+                !float.TryParse(data[3], NumberStyles.Any, CultureInfo.InvariantCulture, out float z))
             {
                 throw new ArgumentException("Could not parse X, Y, or Z parameter as double", nameof(data));
             }
 
-            X = x;
-            Y = y;
-            Z = z;
-
-            if (data.Length > 4 && double.TryParse(data[4], NumberStyles.Any, CultureInfo.InvariantCulture, out double w))
+            if (data.Length > 4 && float.TryParse(data[4], NumberStyles.Any, CultureInfo.InvariantCulture, out float w))
             {
-                W = w;
+                Coordinates = new Vector4(x, y, z, w);
+            }
+            else
+            {
+                Coordinates = new Vector4(x, y, z, 1);
             }
         }
 
         public override string ToString()
         {
-            return W == 1.0 ? $"v {X} {Y} {Z}" : $"v {X} {Y} {Z} {W}";
+            return Coordinates.W == 1.0 ? $"v {Coordinates.X} {CY} {Z}" : $"v {X} {Y} {Z} {W}";
         }
     }
 }

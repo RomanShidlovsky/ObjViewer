@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,9 +10,7 @@ namespace ObjViewer.Parser.Types
 {
     public class TextureVertex : Type
     {
-        public double U { get; set; }
-        public double V { get; set; } = 0;
-        public double W { get; set; } = 0;
+        public Vector3 Coordinates { get; set; }
         public int Index { get; set; }
 
         public TextureVertex()
@@ -22,27 +21,24 @@ namespace ObjViewer.Parser.Types
 
         protected override void ParseAndSetValues(string[] data)
         {
-            if (!double.TryParse(data[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double u))
+            if (!TryParseFloat(data[1], out float x))
             {
-                throw new ArgumentException("Could not parse U parameter as double", nameof(data));
+                throw new ArgumentException("Could not parse first coordinate of parameter as double", nameof(data));
             }
 
-            U = u;
+            Vector3 vector = new Vector3 { X = x, Y = 0, Z = 0 };
 
-            if (data.Length > 2 && double.TryParse(data[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double v))
+            if (data.Length > 2 && TryParseFloat(data[2], out float y))
             {
-                V = v;
+                vector.Y = y;
+
+                if (data.Length > 3 && TryParseFloat(data[3], out float z))
+                {
+                    vector.Z = z;
+                }
             }
 
-            if (data.Length > 3 && double.TryParse(data[3], NumberStyles.Any, CultureInfo.InvariantCulture, out double w))
-            {
-                W = w;
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"vt {U} {V} {W}";
+            Coordinates = vector;
         }
     }
 }

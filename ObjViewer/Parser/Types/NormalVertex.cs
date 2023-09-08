@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Globalization;
+using System.Numerics;
 
 namespace ObjViewer.Parser.Types
 {
     public class NormalVertex : Type
     {
-        public double I { get; set; }
-        public double J { get; set; }
-        public double K { get; set; }
+        public Vector3 Coordinates { get; set; }
         public int Index { get; set; }
 
         public NormalVertex()
@@ -18,21 +17,14 @@ namespace ObjViewer.Parser.Types
 
         protected override void ParseAndSetValues(string[] data)
         {
-            if (!double.TryParse(data[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double i) ||
-                !double.TryParse(data[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double j) ||
-                !double.TryParse(data[3], NumberStyles.Any, CultureInfo.InvariantCulture, out double k))
+            if (!TryParseFloat(data[1], out float x) ||
+                !TryParseFloat(data[2], out float y) ||
+                !TryParseFloat(data[3], out float z))
             {
                 throw new ArgumentException("Could not parse X, Y, or Z parameter as double", nameof(data));
             }
 
-            I = i;
-            J = j;
-            K = k;
-        }
-
-        public override string ToString()
-        {
-            return $"vn {I} {J} {K}";
+            Coordinates = new Vector3(x, y, z);
         }
     }
 }
