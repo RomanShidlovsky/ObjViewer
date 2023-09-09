@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Numerics;
 
-namespace ObjViewer.Parser.Types
+namespace ObjViewer.Model.Types
 {
     public class Vertex : Type
     {
@@ -18,26 +18,21 @@ namespace ObjViewer.Parser.Types
 
         protected override void ParseAndSetValues(string[] data)
         {
-            if (!float.TryParse(data[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float x) ||
-                !float.TryParse(data[2], NumberStyles.Any, CultureInfo.InvariantCulture, out float y) ||
-                !float.TryParse(data[3], NumberStyles.Any, CultureInfo.InvariantCulture, out float z))
+            if (!TryParseFloat(data[1], out float x) ||
+                !TryParseFloat(data[2], out float y) ||
+                !TryParseFloat(data[3], out float z))
             {
                 throw new ArgumentException("Could not parse X, Y, or Z parameter as double", nameof(data));
             }
 
+            Vector4 vector = new Vector4 { X = x, Y = y, Z = z, W = 1 };
+
             if (data.Length > 4 && float.TryParse(data[4], NumberStyles.Any, CultureInfo.InvariantCulture, out float w))
             {
-                Coordinates = new Vector4(x, y, z, w);
+                vector.W = w;
             }
-            else
-            {
-                Coordinates = new Vector4(x, y, z, 1);
-            }
-        }
 
-        public override string ToString()
-        {
-            return Coordinates.W == 1.0 ? $"v {Coordinates.X} {CY} {Z}" : $"v {X} {Y} {Z} {W}";
+            Coordinates = vector;
         }
     }
 }

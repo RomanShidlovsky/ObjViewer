@@ -1,4 +1,4 @@
-﻿using ObjViewer.Parser.Types;
+﻿using ObjViewer.Model.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjViewer.Parser
+namespace ObjViewer.Model
 {
-    public class Obj
+    public class ObjModel
     {
         public List<Vertex> VertexList;
         public List<TextureVertex> TextureVertexList;
@@ -16,7 +16,7 @@ namespace ObjViewer.Parser
         public List<Face> FaceList;
         public Extent Size { get; set; }
 
-        public Obj()
+        public ObjModel()
         {
             VertexList = new List<Vertex>();
             TextureVertexList = new List<TextureVertex>();
