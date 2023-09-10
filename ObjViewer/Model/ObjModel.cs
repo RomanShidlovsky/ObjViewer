@@ -60,19 +60,19 @@ namespace ObjViewer.Model
                         Vertex v = new Vertex();
                         v.LoadFromStringArray(parts);
                         VertexList.Add(v);
-                        v.Index = VertexList.Count;
+                        v.Index = VertexList.Count - 1;
                         break;
                     case "vt":
                         TextureVertex vt = new TextureVertex();
                         vt.LoadFromStringArray(parts);
                         TextureVertexList.Add(vt);
-                        vt.Index = TextureVertexList.Count;
+                        vt.Index = TextureVertexList.Count - 1;
                         break;
                     case "vn":
                         NormalVertex vn = new NormalVertex();
                         vn.LoadFromStringArray(parts);
                         NormalVertexList.Add(vn);
-                        vn.Index = NormalVertexList.Count;
+                        vn.Index = NormalVertexList.Count - 1;
                         break;
                     case "f":
                         Face f = new Face();
@@ -101,12 +101,12 @@ namespace ObjViewer.Model
 
             Size = new Extent
             {
-                XMax = VertexList.Max(v => v.X),
-                XMin = VertexList.Min(v => v.X),
-                YMax = VertexList.Max(v => v.Y),
-                YMin = VertexList.Min(v => v.Y),
-                ZMax = VertexList.Max(v => v.Z),
-                ZMin = VertexList.Min(v => v.Z)
+                XMax = VertexList.Max(v => v.Coordinates.X),
+                XMin = VertexList.Min(v => v.Coordinates.X),
+                YMax = VertexList.Max(v => v.Coordinates.Y),
+                YMin = VertexList.Min(v => v.Coordinates.Y),
+                ZMax = VertexList.Max(v => v.Coordinates.Z),
+                ZMin = VertexList.Min(v => v.Coordinates.Z)
             };
         }
     }

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Numerics;
 
-namespace ObjViewer.Parser.Types
+namespace ObjViewer.Model.Types
 {
     public class NormalVertex : Type
     {

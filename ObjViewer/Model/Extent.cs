@@ -1,16 +1,20 @@
-﻿namespace ObjViewer.Parser
+﻿namespace ObjViewer.Model
 {
     public class Extent
     {
-        public double XMax { get; set; }
-        public double XMin { get; set; }
-        public double YMax { get; set; }
-        public double YMin { get; set; }
-        public double ZMax { get; set; }
-        public double ZMin { get; set; }
+        public float XMax { get; set; }
+        public float XMin { get; set; }
+        public float YMax { get; set; }
+        public float YMin { get; set; }
+        public float ZMax { get; set; }
+        public float ZMin { get; set; }
 
-        public double XSize { get { return XMax - XMin; } }
-        public double YSize { get { return YMax - YMin; } }
-        public double ZSize { get { return ZMax - ZMin; } }
+        public float XSize { get { return XMax - XMin; } }
+        public float YSize { get { return YMax - YMin; } }
+        public float ZSize { get { return ZMax - ZMin; } }
+
+        public float XCenter { get { return (XMin + XMax) / 2; } }
+        public float YCenter { get { return (YMin + YMax) / 2; } }
+        public float ZCenter { get { return (ZMin + ZMax) / 2; } }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjViewer.Parser.Types
+namespace ObjViewer.Model.Types
 {
     public class Face : Type
     {
@@ -36,16 +36,16 @@ namespace ObjViewer.Parser.Types
                     throw new ArgumentException("Could not parse vertex index as int");
                 }
 
-                VertexIndexList.Add(index);
+                VertexIndexList.Add(index - 1);
 
                 if (parts.Length > 1 && int.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out index))
                 {
-                    TextureIndexList.Add(index);
+                    TextureIndexList.Add(index - 1);
                 }
 
                 if (parts.Length > 2 && int.TryParse(parts[2], NumberStyles.Any, CultureInfo.InvariantCulture, out index))
                 {
-                    NormalIndexList.Add(index);
+                    NormalIndexList.Add(index - 1);
                 }
             }
         }

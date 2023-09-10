@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjViewer.Parser.Types
+namespace ObjViewer.Model.Types
 {
     public abstract class Type
     {

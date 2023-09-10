@@ -9,7 +9,16 @@ namespace ObjViewer.Model
     public class ModelParams
     {
         public float Scaling { get; set; }
-        public float ModelYaw { get; set; }
+
+        private float _modelYaw;
+        public float ModelYaw 
+        { 
+            get => _modelYaw; 
+            set
+            {
+                _modelYaw = (float)(value * Math.PI / 180);
+            }
+        }
         public float ModelPitch { get; set; }
         public float ModelRoll { get; set; }
         public float TranslationX { get; set; }
@@ -25,30 +34,30 @@ namespace ObjViewer.Model
         public float AspectRatio { get; set; }
         public float NearPlaneDistance { get; set; }
         public float FarPlaneDistance { get; set; }
-        public int XMin { get; set; }
-        public int YMin { get; set; }
+        public float XMin { get; set; }
+        public float YMin { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 
         public ModelParams(float scaling, float modelYaw, float modelPitch, float modelRoll, float translationX,
                float translationY, float translationZ, float cameraPositionX, float cameraPositionY, float cameraPositionZ,
                float cameraYaw, float cameraPitch, float cameraRoll, float fieldOfView, float aspectRatio, float nearPlaneDistance,
-               float farPlaneDistance, int xMin, int yMin, int width, int height)
+               float farPlaneDistance, float xMin, float yMin, int width, int height)
         {
             Scaling = scaling;
-            ModelYaw = modelYaw;
-            ModelPitch = modelPitch;
-            ModelRoll = modelRoll;
+            ModelYaw = (float)(modelYaw * Math.PI / 180);
+            ModelPitch = (float)(modelPitch * Math.PI / 180);
+            ModelRoll = (float)(modelRoll * Math.PI / 180);
             TranslationX = translationX;
             TranslationY = translationY;
             TranslationZ = translationZ;
             CameraPositionX = cameraPositionX;
             CameraPositionY = cameraPositionY;
             CameraPositionZ = cameraPositionZ;
-            CameraYaw = cameraYaw;
-            CameraPitch = cameraPitch;
-            CameraRoll = cameraRoll;
-            FieldOfView = fieldOfView;
+            CameraYaw = (float)(cameraYaw * Math.PI / 180);
+            CameraPitch = (float)(cameraPitch * Math.PI / 180);
+            CameraRoll = (float)(cameraRoll * Math.PI / 180);
+            FieldOfView = (float)(fieldOfView * Math.PI / 180);
             AspectRatio = aspectRatio;
             NearPlaneDistance = nearPlaneDistance;
             FarPlaneDistance = farPlaneDistance;

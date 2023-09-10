@@ -36,7 +36,7 @@ namespace ObjViewer.Core
         {
             return Matrix4x4.CreateScale(modelParams.Scaling) *
                 Matrix4x4.CreateFromYawPitchRoll(modelParams.ModelYaw, modelParams.ModelPitch, modelParams.ModelRoll) *
-                Matrix4x4.CreateTranslation(modelParams.TranslationX, modelParams.TranslationY, modelParams.CameraPositionZ);                             
+                Matrix4x4.CreateTranslation(modelParams.TranslationX, modelParams.TranslationY, modelParams.TranslationZ);                             
         }
 
         private static Matrix4x4 GetViewerMatrix(ModelParams modelParams)
@@ -69,9 +69,7 @@ namespace ObjViewer.Core
 
         private static Matrix4x4 GetMVP(ModelParams modelParams)
         {
-            return GetWorldMatrix(modelParams) * GetViewerMatrix(modelParams) * GetViewPortMatrix(modelParams);
+            return GetWorldMatrix(modelParams) * GetViewerMatrix(modelParams) * GetPerspectiveProjectionMatrix(modelParams);
         }
-
-        private
     }
 }
