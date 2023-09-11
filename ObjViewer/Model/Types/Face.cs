@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ObjViewer.Model.Types
 {
-    public class Face : Type
+    public class Face : Type, ICloneable
     {
         public List<int> VertexIndexList { get; set; }
         public List<int> TextureIndexList { get; set; }
@@ -74,5 +74,14 @@ namespace ObjViewer.Model.Types
             return b.ToString();
         }
 
+        public object Clone()
+        {
+            return new Face()
+            {
+                VertexIndexList = new List<int>(this.VertexIndexList),
+                NormalIndexList = new List<int>(this.NormalIndexList),
+                TextureIndexList = new List<int>(this.TextureIndexList)
+            };
+        }
     }
 }

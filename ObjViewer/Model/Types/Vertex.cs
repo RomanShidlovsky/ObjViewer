@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace ObjViewer.Model.Types
 {
-    public class Vertex : Type
+    public class Vertex : Type, ICloneable
     {
 
         public Vector4 Coordinates { get; set; }
@@ -33,6 +33,15 @@ namespace ObjViewer.Model.Types
             }
 
             Coordinates = vector;
+        }
+
+        public object Clone()
+        {
+            return new Vertex()
+            {
+                Coordinates = this.Coordinates,
+                Index = this.Index
+            };
         }
     }
 }

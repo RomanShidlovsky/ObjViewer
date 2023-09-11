@@ -1,6 +1,7 @@
 ﻿using ObjViewer.Model.Types;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ObjViewer.Model
 {
-    public class ObjModel
+    public class ObjModel : ICloneable
     {
         public List<Vertex> VertexList;
         public List<TextureVertex> TextureVertexList;
@@ -83,7 +84,7 @@ namespace ObjViewer.Model
             }
         }
 
-        private void UpdateSize()
+        public void UpdateSize()
         {
             if (VertexList.Count== 0)
             {
@@ -108,6 +109,42 @@ namespace ObjViewer.Model
                 ZMax = VertexList.Max(v => v.Coordinates.Z),
                 ZMin = VertexList.Min(v => v.Coordinates.Z)
             };
+        }
+
+        public bool IsPointInObjectRect(double x, double y)
+        {
+            return (x > Size.XMin && x < Size.XMax && 
+                y > Size.YMin && y < Size.YMax);
+        }
+
+        public object Clone()
+        {
+            ObjModel clonedObjModel = new ObjModel();
+
+            // Copy the vertex data
+            clonedObjModel.VertexList.AddRange(this.VertexList.Select(v => (Vertex)v.Clone()));
+
+            // Copy the texture vertex data
+            clonedObjModel.TextureVertexList.AddRange(this.TextureVertexList.Select(vt => (TextureVertex)vt.Clone()));
+
+            // Copy the normal vertex data
+            clonedObjModel.NormalVertexList.AddRange(this.NormalVertexList.Select(vn => (NormalVertex)vn.Clone()));
+
+            // Copy the face data
+            clonedObjModel.FaceList.AddRange(this.FaceList.Select(f => (Face)f.Clone()));
+
+            // Copy the size extent
+            clonedObjModel.Size = new Extent
+            {
+                XMax = this.Size.XMax,
+                XMin = this.Size.XMin,
+                YMax = this.Size.YMax,
+                YMin = this.Size.YMin,
+                ZMax = this.Size.ZMax,
+                ZMin = this.Size.ZMin
+            };
+
+            return clonedObjModel;
         }
     }
 }

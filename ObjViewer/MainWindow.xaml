@@ -26,7 +26,11 @@
                 x:Name="gridPicture"
                 Grid.Column="0"
                 Margin="8"
-                Background="Black">
+                Background="Black"
+                MouseWheel="gridPicture_MouseWheel"
+                MouseLeftButtonDown="gridPicture_MouseLeftButtonDown"
+                MouseMove="gridPicture_MouseMove"
+                MouseLeftButtonUp="gridPicture_MouseLeftButtonUp">
                 <Image
                     x:Name="picture">
                 </Image>
@@ -35,15 +39,29 @@
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1.5*"/>
                     <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Button
                     x:Name="openFileButton"
                     Grid.Row="0"
+                    Grid.ColumnSpan="2"
                     Content="Open File"
                     Margin="8"
                     Click="openFileButton_Click"/>
+                <Button
+                    x:Name="drawButton"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="2"
+                    Content="Draw"
+                    Margin="8" Click="drawButton_Click"/>
             </Grid>
         </Grid>
     </Grid>

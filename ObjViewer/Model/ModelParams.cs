@@ -8,17 +8,26 @@ namespace ObjViewer.Model
 {
     public class ModelParams
     {
-        public float Scaling { get; set; }
-
-        private float _modelYaw;
-        public float ModelYaw 
-        { 
-            get => _modelYaw; 
-            set
+        private float _scaling;
+        public float Scaling
+        {
+            get 
+            { 
+                return _scaling; 
+            }
+            set 
             {
-                _modelYaw = (float)(value * Math.PI / 180);
+                if (value > 0.1 && value < 25)
+                {
+                    _scaling = value;
+                }
+               
             }
         }
+
+
+        public float ModelYaw { get; set; }
+        
         public float ModelPitch { get; set; }
         public float ModelRoll { get; set; }
         public float TranslationX { get; set; }

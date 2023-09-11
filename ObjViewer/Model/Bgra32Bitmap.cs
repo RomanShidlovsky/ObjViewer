@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -53,6 +54,25 @@ namespace ObjViewer.Model
                     address[3] = Convert.ToByte(value.A);
                 }
             }
+        }
+
+        public void Clear(Color clearColor)
+        {          
+            byte[] pixels = new byte[_backBufferStride * _pixelWidth];
+
+            for (int y = 0; y < _pixelHeight; y++)
+            {
+                for (int x = 0; x < _pixelWidth; x++)
+                {
+                    int index = y * _backBufferStride + 4 * x; // 4 bytes per pixel for Bgr32 format
+                    pixels[index + 0] = clearColor.B;
+                    pixels[index + 1] = clearColor.G;
+                    pixels[index + 2] = clearColor.R;
+                    pixels[index + 3] = clearColor.A;
+                }
+            }
+
+            Source.WritePixels(new Int32Rect(0, 0, _pixelWidth, Source.PixelHeight), pixels, _backBufferStride, 0);
         }
     }
 }

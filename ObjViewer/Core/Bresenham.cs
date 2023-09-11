@@ -13,13 +13,12 @@ namespace ObjViewer.Core
 {
     public class Bresenham
     {
-        public ObjModel Model { get; set; }
+        private ObjModel _model;
         public System.Windows.Media.Color Color { get; set; } = System.Windows.Media.Color.FromRgb(255, 255, 255);
         private Bgra32Bitmap _bitmap;
 
-        public Bresenham(ObjModel model, Bgra32Bitmap bitmap, System.Windows.Media.Color? color = null)
+        public Bresenham(Bgra32Bitmap bitmap, System.Windows.Media.Color? color = null)
         {
-            Model = model;
             _bitmap = bitmap;
 
             if (color != null)
@@ -28,9 +27,16 @@ namespace ObjViewer.Core
             }
         }
 
-        public void DrawModel()
+
+        public void DrawModel(ObjModel objModel)
         {
-            _ = Parallel.ForEach(Model.FaceList, face =>
+            _model = objModel;
+            DrawModel();
+        }
+
+        private void DrawModel()
+        {
+            _ = Parallel.ForEach(_model!.FaceList, face =>
             {
                 if (IsFaceVisible(face))
                 {
@@ -137,7 +143,7 @@ namespace ObjViewer.Core
         
         private Vertex GetVertexByIndex(int index)
         {
-            return Model.VertexList[index];
+            return _model.VertexList[index];
         }
 
         private Vector3 Vector4ToVector3(Vector4 vector)

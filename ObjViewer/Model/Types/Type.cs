@@ -37,6 +37,6 @@ namespace ObjViewer.Model.Types
         protected bool TryParseFloat(string value, out float result)
         {
             return float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
-        }
+        }    
     }
 }

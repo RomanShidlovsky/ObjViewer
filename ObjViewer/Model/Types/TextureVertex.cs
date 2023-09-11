@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ObjViewer.Model.Types
 {
-    public class TextureVertex : Type
+    public class TextureVertex : Type, ICloneable
     {
         public Vector3 Coordinates { get; set; }
         public int Index { get; set; }
@@ -39,6 +39,15 @@ namespace ObjViewer.Model.Types
             }
 
             Coordinates = vector;
+        }
+
+        public object Clone()
+        {
+            return new TextureVertex()
+            {
+                Coordinates = Coordinates,
+                Index = Index
+            };
         }
     }
 }
