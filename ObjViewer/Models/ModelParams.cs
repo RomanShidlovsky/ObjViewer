@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjViewer.Model
+namespace ObjViewer.Models
 {
     public class ModelParams
     {

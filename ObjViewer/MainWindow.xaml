@@ -6,11 +6,12 @@
         xmlns:local="clr-namespace:ObjViewer"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="Obj Viewer" Height="450" Width="800"
+        Title="Obj Viewer" Height="800" Width="1000"
+        MinHeight="600" MinWidth="900"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="10"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -18,46 +19,174 @@
     <Grid>
         <Grid Margin="16">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Grid
-                x:Name="gridPicture"
+                x:Name="GridPicture"
                 Grid.Column="0"
                 Margin="8"
                 Background="Black"
-                MouseWheel="gridPicture_MouseWheel"
-                MouseLeftButtonDown="gridPicture_MouseLeftButtonDown"
-                MouseMove="gridPicture_MouseMove"
-                MouseLeftButtonUp="gridPicture_MouseLeftButtonUp"
-                MouseRightButtonDown="gridPicture_MouseRightButtonDown"
-                MouseRightButtonUp="gridPicture_MouseRightButtonUp"
-                MouseLeave="gridPicture_MouseLeave">
+                MouseWheel="GridPicture_MouseWheel"
+                MouseLeftButtonDown="GridPicture_MouseLeftButtonDown"
+                MouseMove="GridPicture_MouseMove"
+                MouseLeftButtonUp="GridPicture_MouseLeftButtonUp"
+                MouseRightButtonDown="GridPicture_MouseRightButtonDown"
+                MouseRightButtonUp="GridPicture_MouseRightButtonUp"
+                MouseLeave="GridPicture_MouseLeave">
                 <Image
-                    x:Name="picture">
+                    x:Name="Picture">
                 </Image>
             </Grid>
 
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="10*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+            <materialDesign:Card
+                Grid.Column="1"
+                UniformCornerRadius="8"
+                Padding="8"
+                Margin="8 0 0 0">
+                <StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button
+                            x:Name="OpenFileButton"
+                            Grid.Row="0"
+                            Grid.ColumnSpan="7"
+                            Content="Open File"
+                            Margin="8"
+                            Click="OpenFileButton_Click"/>
+                        
+                        <StackPanel
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Margin="4">
+                            <RadioButton x:Name="BresenhamRadioButton" IsChecked="True" Content="Bresenham" Click="DrawButton_Click"/>
+                            <RadioButton x:Name="FlatShadingRadioButton" Content="Flat Shading" Click="DrawButton_Click"/>
+                        </StackPanel>
+                        
+                        <StackPanel
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="7">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                     
-                </Grid.ColumnDefinitions>
-                <Button
-                    x:Name="openFileButton"
-                    Grid.Row="0"
-                    Grid.ColumnSpan="2"
-                    Content="Open File"
-                    Margin="8"
-                    Click="openFileButton_Click"/>
-            </Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions> 
+                                
+                                <Label 
+                                    Content="Light Vector" 
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                <Label
+                                    Content="X"
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                <TextBox
+                                    x:Name="LightVectorXTextBox"
+                                    Text="0"
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                <Label 
+                                    Content="Y" 
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                <TextBox
+                                    x:Name="LightVectorYTextBox"
+                                    Text="0"
+                                    Grid.Column="4"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                <Label 
+                                    Content="Z" 
+                                    Grid.Column="5"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                <TextBox
+                                    x:Name="LightVectorZTextBox"
+                                    Text="1"
+                                    Grid.Column="6"
+                                    Grid.Row="0"
+                                    Margin="4"/>
+                                
+                                <Label 
+                                    Content="Model Color" 
+                                    Grid.Column="0"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                                <Label
+                                    Content="R"
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                                <TextBox
+                                    x:Name="ColorRTextBox"
+                                    Text="255"
+                                    Grid.Column="2"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                                <Label 
+                                    Content="G" 
+                                    Grid.Column="3"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                                <TextBox
+                                    x:Name="ColorGTextBox"
+                                    Text="255"
+                                    Grid.Column="4"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                                <Label 
+                                    Content="B" 
+                                    Grid.Column="5"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                                <TextBox
+                                    x:Name="ColorBTextBox"
+                                    Text="255"
+                                    Grid.Column="6"
+                                    Grid.Row="1"
+                                    Margin="4"/>
+                            </Grid>
+                        </StackPanel>
+                        
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
+            
         </Grid>
     </Grid>
 </Window>

@@ -1,42 +1,36 @@
-﻿using ObjViewer.Model;
-using ObjViewer.Model.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+using System.Windows.Media;
+using ObjViewer.Models;
+using Color = System.Windows.Media.Color;
 
 namespace ObjViewer.Core
 {
     public class Bresenham
     {
-        private ObjModel _model;
-        public System.Windows.Media.Color Color { get; set; } = System.Windows.Media.Color.FromRgb(255, 255, 255);
-        private Bgra32Bitmap _bitmap;
+        protected ObjModel Model { get; set; }
+        protected Bgra32Bitmap Bitmap { get; set; }
+        protected Color Color { get; set; } = Colors.White;
 
-        public Bresenham(Bgra32Bitmap bitmap, System.Windows.Media.Color? color = null)
+        public Bresenham(Bgra32Bitmap bitmap)
         {
-            _bitmap = bitmap;
-
-            if (color != null)
-            {
-                Color = (System.Windows.Media.Color)color;
-            }
+            Bitmap = bitmap;
         }
 
 
-        public void DrawModel(ObjModel objModel)
+        public void DrawModel(ObjModel objModel, Color color)
         {
-            _model = objModel;
+            Model = objModel;
+            Color = color;
             DrawModel();
         }
 
-        private void DrawModel()
+        protected virtual void DrawModel()
         {
-            _ = Parallel.ForEach(_model!.FaceList, face =>
+            _ = Parallel.ForEach(Model.Faces, face =>
             {
                 if (IsFaceVisible(face))
                 {
@@ -45,88 +39,111 @@ namespace ObjViewer.Core
             });
         }
 
-        private void DrawFace(Face face)
+        protected virtual void DrawFace(List<Vector3> face)
         {
-            for (int i = 0; i < face.VertexIndexList.Count - 1; i++)
+            for (int i = 0; i < face.Count - 1; i++)
             {
-                DrawSide(face, i, i + 1);
+                DrawSide(face, i, i + 1, Color);
             }
 
-            DrawSide(face, 0, face.VertexIndexList.Count - 1);
+            DrawSide(face, 0, face.Count - 1, Color);
         }
 
-        private void DrawSide(Face face, int index0, int index1)
+        protected void DrawSide(List<Vector3> face, int index0, int index1, Color color, List<Pixel>? sidePixels = null)
         {
-            Vector4 point0 = GetVertexByIndex(face.VertexIndexList[index0]).Coordinates;
-            Vector4 point1 = GetVertexByIndex(face.VertexIndexList[index1]).Coordinates;
+            Pixel point0 = GetFacePoint(face, index0, color);
+            Pixel point1 = GetFacePoint(face, index1, color);
 
-            DrawLine(point0, point1);
+            DrawLine(point0, point1, sidePixels);
         }
 
-        private void DrawLine(Vector4 src, Vector4 dest)
+        protected void DrawLine(Pixel src, Pixel dest, List<Pixel>? sidePixels = null)
         {
-            Point srcPoint = new Point((int)Math.Round(src.X), (int)Math.Round(src.Y));
-            Point destPoint = new Point((int)Math.Round(dest.X), (int)Math.Round(dest.Y));
+            Color color = src.Color;
 
-            int dx = Math.Abs(destPoint.X - srcPoint.X);
-            int dy = - Math.Abs(destPoint.Y - srcPoint.Y);
+            int dx = Math.Abs(dest.X - src.X);
+            int dy = -Math.Abs(dest.Y - src.Y);
+            float dz = Math.Abs(dest.Z - src.Z);
+
+            int signX = src.X < dest.X ? 1 : -1;
+            int signY = src.Y < dest.Y ? 1 : -1;
+            float signZ = src.Z < dest.Z ? 1 : -1;
+
+            Pixel p = src;
             
-            int signX = srcPoint.X < destPoint.X ? 1 : -1;
-            int signY = srcPoint.Y < destPoint.Y ? 1 : -1;
+            float curZ = src.Z;
+            float deltaZ = dz / dy;
 
             int err = dx + dy;
 
-            Point p = srcPoint;
-
-            while (p.X != destPoint.X || p.Y != destPoint.Y)
+            while (p.X != dest.X || p.Y != dest.Y)
             {
-                _bitmap[p.X, p.Y] = Color;
+                DrawPixel(p.X, p.Y, curZ, color, sidePixels);
 
-                int err2 = err * 2;     
+                int err2 = err * 2;
 
                 if (err2 > dy)
                 {
-                    p.X += signX;        
-                    err += dy;           
+                    p.X += signX;
+                    err += dy;
                 }
 
                 if (err2 < dx)
                 {
-                    p.Y += signY;            
-                    err += dx;                 
+                    p.Y += signY;
+                    curZ += signZ * deltaZ;
+                    err += dx;
                 }
             }
 
-            _bitmap[destPoint.X, destPoint.Y] = Color;
+            DrawPixel(dest.X, dest.Y, dest.Z, color, sidePixels);
         }
 
-        private bool IsFaceVisible(Face face)
+        protected virtual void DrawPixel(int x, int y, float z, Color color, List<Pixel>? sidePixels = null)
+        {
+            if (x > 0 && x < Bitmap.PixelWidth &&
+                y > 0 && y < Bitmap.PixelHeight &&
+                z is > 0 and < 1)
+            {
+                Bitmap[x, y] = color;
+            }
+        }
+
+        protected bool IsFaceVisible(List<Vector3> face)
         {
             return GetFaceNormal(face).Z < 0;
         }
 
-        private Vector3 GetFaceNormal(Face face)
+        protected Vector3 GetFaceNormal(List<Vector3> face)
         {
-            Vertex vertex0 = GetVertexByIndex(face.VertexIndexList[0]);
-            Vertex vertex1 = GetVertexByIndex(face.VertexIndexList[1]);
-            Vertex vertex2 = GetVertexByIndex(face.VertexIndexList[2]);
+            Pixel point1 = GetFacePoint(face, 0, Color);
+            Pixel point2 = GetFacePoint(face, 1, Color);
+            Pixel point3 = GetFacePoint(face, 2, Color);
 
-            Vector3 vector0 = Vector4ToVector3(vertex1.Coordinates) - Vector4ToVector3(vertex0.Coordinates);
-            Vector3 vector1 = Vector4ToVector3(vertex2.Coordinates) - Vector4ToVector3(vertex0.Coordinates);
+            return GetNormal(point1, point2, point3);
+        }
+        
+        private static Vector3 GetNormal(Pixel point1, Pixel point2, Pixel point3)
+        {
+            Vector3 vector1 = new(point2.X - point1.X,
+                point2.Y - point1.Y,
+                point2.Z - point1.Z);
 
-            Vector3 cross = Vector3.Cross(vector0, vector1);
+            Vector3 vector2 = new(point3.X - point1.X,
+                point3.Y - point1.Y,
+                point3.Z - point1.Z);
+
+            Vector3 cross = Vector3.Cross(vector1, vector2);
 
             return Vector3.Normalize(cross);
         }
-        
-        private Vertex GetVertexByIndex(int index)
-        {
-            return _model.VertexList[index];
-        }
 
-        private Vector3 Vector4ToVector3(Vector4 vector)
+        protected virtual Pixel GetFacePoint(List<Vector3> face, int i, Color color)
         {
-            return new Vector3(vector.X, vector.Y, vector.Z);
+            int indexPoint = (int)face[i].X;
+            Vector4 point = Model.Points[indexPoint];
+
+            return new Pixel((int)point.X, (int)point.Y, point.Z, color);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using ObjViewer.Model;
+﻿using ObjViewer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,18 +16,18 @@ namespace ObjViewer.Core
             Matrix4x4 mvpMatrix = GetMVP(modelParams);
             float w;
 
-            for (int i = 0; i < model.VertexList.Count; i++)
+            for (int i = 0; i < model.Points.Count; i++)
             {
-                model.VertexList[i].Coordinates = Vector4.Transform(model.VertexList[i].Coordinates, mvpMatrix);
+                model.Points[i] = Vector4.Transform(model.Points[i], mvpMatrix);
 
-                w = model.VertexList[i].Coordinates.W;
-                model.VertexList[i].Coordinates /= w;
+                w = model.Points[i].W;
+                model.Points[i] /= w;
 
-                model.VertexList[i].Coordinates = Vector4.Transform(model.VertexList[i].Coordinates, GetViewPortMatrix(modelParams));
-                model.VertexList[i].Coordinates = new Vector4(
-                    model.VertexList[i].Coordinates.X,
-                    model.VertexList[i].Coordinates.Y,
-                    model.VertexList[i].Coordinates.Z,
+                model.Points[i] = Vector4.Transform(model.Points[i], GetViewPortMatrix(modelParams));
+                model.Points[i] = new Vector4(
+                    model.Points[i].X,
+                    model.Points[i].Y,
+                    model.Points[i].Z,
                     w);
             }
         }

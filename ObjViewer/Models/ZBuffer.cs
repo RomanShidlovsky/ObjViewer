@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Windows.Media.Animation;
 
-namespace ObjViewer.Model;
+namespace ObjViewer.Models;
 
 public class ZBuffer
 {

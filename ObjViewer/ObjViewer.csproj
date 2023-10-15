@@ -12,4 +12,26 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Model\Types\**" />
+    <Compile Remove="Model\Extent.cs" />
+    <Compile Remove="Models\Types\**" />
+    <Compile Remove="Models\Extent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Model\Types\**" />
+    <EmbeddedResource Remove="Models\Types\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Model\Types\**" />
+    <Page Remove="Models\Types\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Model\Types\**" />
+    <None Remove="Models\Types\**" />
+  </ItemGroup>
+
 </Project>
