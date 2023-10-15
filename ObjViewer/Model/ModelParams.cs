@@ -17,7 +17,7 @@ namespace ObjViewer.Model
             }
             set 
             {
-                if (value > 0.1 && value < 25)
+                if (value > 0.001 && value < 25)
                 {
                     _scaling = value;
                 }
@@ -48,6 +48,9 @@ namespace ObjViewer.Model
         public int Width { get; set; }
         public int Height { get; set; }
 
+        public float DeltaX { get; set; }
+        public float DeltaY { get; set; }
+
         public ModelParams(float scaling, float modelYaw, float modelPitch, float modelRoll, float translationX,
                float translationY, float translationZ, float cameraPositionX, float cameraPositionY, float cameraPositionZ,
                float cameraYaw, float cameraPitch, float cameraRoll, float fieldOfView, float aspectRatio, float nearPlaneDistance,
@@ -74,6 +77,8 @@ namespace ObjViewer.Model
             YMin = yMin;
             Height = height;
             Width = width;
+            DeltaX = 0;
+            DeltaY = 0;
         }
     }
 }

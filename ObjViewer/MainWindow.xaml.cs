@@ -30,6 +30,7 @@ namespace ObjViewer
         private Bresenham _bresenham;
         private ObjModel? _clonedModel;
         private bool _isDragging = false;
+        private bool _cameraMoving = false;
         private Point _startPosition;
 
         public MainWindow()
@@ -40,7 +41,9 @@ namespace ObjViewer
 
         private void openFileButton_Click(object sender, RoutedEventArgs e)
         {
+            string ObjFilter = "Obj files (*.obj) | *.obj";
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = ObjFilter;
 
             if (openFileDialog.ShowDialog() is not null)
             {
@@ -52,7 +55,7 @@ namespace ObjViewer
                     int width = (int)gridPicture.ActualWidth;
                     int height = (int)gridPicture.ActualHeight;
                     _modelParams = new ModelParams(
-                                scaling: 1f,
+                                scaling: 0.1f,
                                 modelYaw: 0,
                                 modelPitch: 0,
                                 modelRoll: 0,
@@ -93,14 +96,9 @@ namespace ObjViewer
                 Transformations.TransformFromLocalToViewPort(_clonedModel, _modelParams);
                 _clonedModel.UpdateSize();
                 
-                if (_clonedModel.Size.XSize < gridPicture.ActualWidth &&
-                    _clonedModel.Size.YSize < gridPicture.ActualHeight)
-                {
-                    _bresenham.DrawModel(_clonedModel);
+                _bresenham.DrawModel(_clonedModel);
 
-                    picture.Source = _bitmap.Source;
-                }
-                
+                picture.Source = _bitmap.Source;
             }
         }
 
@@ -129,7 +127,7 @@ namespace ObjViewer
                     _isDragging = true;
                     _startPosition = p;
                 }
-            }           
+            }
         }
 
         private void gridPicture_MouseMove(object sender, MouseEventArgs e)
@@ -146,10 +144,44 @@ namespace ObjViewer
                 _startPosition = currentPosition;
                 DrawModel();
             }
+            else if (_cameraMoving)
+            {
+                Point currentPosition = e.GetPosition(picture);
+                double dx = currentPosition.X - _startPosition.X;
+                double dy = -(currentPosition.Y - _startPosition.Y);
+
+                _modelParams.DeltaX += (float)dx;
+                _modelParams.DeltaY += (float)dy;
+
+                _startPosition = currentPosition;
+                DrawModel();
+            }
         }
 
         private void gridPicture_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            _isDragging = false;
+        }
+
+        private void gridPicture_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_clonedModel != null)
+            {
+                Point p = e.GetPosition(picture);
+
+                _cameraMoving = true;
+                _startPosition = p;
+            }
+        }
+
+        private void gridPicture_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _cameraMoving = false;
+        }
+
+        private void gridPicture_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _cameraMoving = false;
             _isDragging = false;
         }
     }

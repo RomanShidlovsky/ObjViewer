@@ -41,17 +41,18 @@ namespace ObjViewer.Core
 
         private static Matrix4x4 GetViewerMatrix(ModelParams modelParams)
         {
-            bool success = Matrix4x4.Invert(Matrix4x4.CreateFromYawPitchRoll(modelParams.CameraYaw, modelParams.CameraPitch, modelParams.CameraRoll) *
-                Matrix4x4.CreateTranslation(modelParams.CameraPositionX, modelParams.CameraPositionY, modelParams.CameraPositionZ), out Matrix4x4 viewMatrix);
+            Vector3 eye = new Vector3(modelParams.CameraPositionX, modelParams.CameraPositionY, modelParams.CameraPositionZ);
+            Vector3 lookAt = new Vector3(0, 0, 0);
+            Vector3 upVector = new Vector3(0, 1, 0);
 
-            if (success)
+            Camera camera = new Camera(eye, lookAt, upVector, modelParams.Width, modelParams.Height);
+            
+            if (modelParams.DeltaX != 0 || modelParams.DeltaY != 0) 
             {
-                return viewMatrix;
+                camera.UpdateCamera(modelParams.DeltaX, modelParams.DeltaY);
             }
-            else
-            {
-                throw new Exception("Can't invert matrix");
-            }
+
+            return camera.ViewMatrix;
         }
 
         private static Matrix4x4 GetPerspectiveProjectionMatrix(ModelParams modelParams)

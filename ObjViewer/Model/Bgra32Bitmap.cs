@@ -64,7 +64,7 @@ namespace ObjViewer.Model
             {
                 for (int x = 0; x < _pixelWidth; x++)
                 {
-                    int index = y * _backBufferStride + 4 * x; // 4 bytes per pixel for Bgr32 format
+                    int index = y * _backBufferStride + 4 * x;
                     pixels[index + 0] = clearColor.B;
                     pixels[index + 1] = clearColor.G;
                     pixels[index + 2] = clearColor.R;

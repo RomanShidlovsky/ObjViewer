@@ -121,19 +121,15 @@ namespace ObjViewer.Model
         {
             ObjModel clonedObjModel = new ObjModel();
 
-            // Copy the vertex data
             clonedObjModel.VertexList.AddRange(this.VertexList.Select(v => (Vertex)v.Clone()));
 
-            // Copy the texture vertex data
             clonedObjModel.TextureVertexList.AddRange(this.TextureVertexList.Select(vt => (TextureVertex)vt.Clone()));
 
-            // Copy the normal vertex data
             clonedObjModel.NormalVertexList.AddRange(this.NormalVertexList.Select(vn => (NormalVertex)vn.Clone()));
-
-            // Copy the face data
+           
             clonedObjModel.FaceList.AddRange(this.FaceList.Select(f => (Face)f.Clone()));
 
-            // Copy the size extent
+            
             clonedObjModel.Size = new Extent
             {
                 XMax = this.Size.XMax,

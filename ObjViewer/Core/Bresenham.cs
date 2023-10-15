@@ -63,28 +63,6 @@ namespace ObjViewer.Core
             DrawLine(point0, point1);
         }
 
-        /*private void DrawLine(Vector4 point0, Vector4 point1)
-        {
-            float dx = Math.Abs(point1.X - point0.X);
-            float dy = Math.Abs(point1.Y - point0.Y);
-
-            int steps = dx > dy ? (int)Math.Round(dx) : (int)Math.Round(dy);
-            
-            float xInc = dx / steps;
-            float yInc = dy / steps;
-
-            float x = point0.X;
-            float y = point0.Y;
-            for (int i = 0; i < steps; i++)
-            {
-                
-                _bitmap[(int)Math.Round(x), (int)Math.Round(y)] = Color;
-
-                x += xInc;
-                y += yInc;
-            }
-        }*/
-
         private void DrawLine(Vector4 src, Vector4 dest)
         {
             Point srcPoint = new Point((int)Math.Round(src.X), (int)Math.Round(src.Y));

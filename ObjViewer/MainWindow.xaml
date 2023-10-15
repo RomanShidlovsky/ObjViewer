@@ -18,7 +18,7 @@
     <Grid>
         <Grid Margin="16">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
 
@@ -30,7 +30,10 @@
                 MouseWheel="gridPicture_MouseWheel"
                 MouseLeftButtonDown="gridPicture_MouseLeftButtonDown"
                 MouseMove="gridPicture_MouseMove"
-                MouseLeftButtonUp="gridPicture_MouseLeftButtonUp">
+                MouseLeftButtonUp="gridPicture_MouseLeftButtonUp"
+                MouseRightButtonDown="gridPicture_MouseRightButtonDown"
+                MouseRightButtonUp="gridPicture_MouseRightButtonUp"
+                MouseLeave="gridPicture_MouseLeave">
                 <Image
                     x:Name="picture">
                 </Image>
@@ -45,8 +48,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    
                 </Grid.ColumnDefinitions>
                 <Button
                     x:Name="openFileButton"
@@ -55,13 +57,6 @@
                     Content="Open File"
                     Margin="8"
                     Click="openFileButton_Click"/>
-                <Button
-                    x:Name="drawButton"
-                    Grid.Row="0"
-                    Grid.ColumnSpan="2"
-                    Grid.Column="2"
-                    Content="Draw"
-                    Margin="8" Click="drawButton_Click"/>
             </Grid>
         </Grid>
     </Grid>
