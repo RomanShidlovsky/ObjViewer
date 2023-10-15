@@ -86,14 +86,17 @@ public class FlatShading : Bresenham
 
     protected virtual void DrawPixelsInFace(List<Pixel>? sidePixels)
     {
+        if (sidePixels is null)
+            return;
+        
         (int? minY, int? maxY) = GetMinMaxY(sidePixels);
         if (minY is null || maxY is null)
         {
             return;
         }
 
-        Color color = sidePixels[0].Color; // цвет одинаковый
-        for (int y = (int)minY; y < maxY; y++) // по очереди отрисовываем линии для каждой y-координаты
+        Color color = sidePixels[0].Color;
+        for (int y = (int)minY; y < maxY; y++) 
         {
             (Pixel? startPixel, Pixel? endPixel) = GetStartEndXForY(sidePixels, y);
             if (startPixel is null || endPixel is null)
@@ -104,15 +107,15 @@ public class FlatShading : Bresenham
             Pixel start = (Pixel)startPixel;
             Pixel end = (Pixel)endPixel;
 
-            float z = start.Z; // в какую сторону приращение z
-            float dz = (end.Z - start.Z) / Math.Abs((float)(end.X - start.X)); // z += dz при изменении x
+            float z = start.Z;
+            float dz = (end.Z - start.Z) / Math.Abs((float)(end.X - start.X));
 
-            // отрисовываем линию
+            
             for (int x = start.X; x < end.X; x++, z += dz)
             {
-                if ((x > 0) && (x < ZBuffer.Width) && // x попал в область экрана
-                    (y > 0) && (y < ZBuffer.Height) && // y попал в область экрана
-                    (z <= ZBuffer[x, y]) && z > 0 && z < 1) // z координата отображаемая
+                if ((x > 0) && (x < ZBuffer.Width) && 
+                    (y > 0) && (y < ZBuffer.Height) &&
+                    (z <= ZBuffer[x, y]) && z > 0 && z < 1)
                 {
                     ZBuffer[x, y] = z;
                     Bitmap[x, y] = color;
@@ -123,13 +126,48 @@ public class FlatShading : Bresenham
 
     protected static (int? min, int? max) GetMinMaxY(IEnumerable<Pixel> pixels)
     {
-        var sorted = pixels.OrderBy(p => p.Y).ToList();
-        return sorted.Count == 0 ? (min: null, max: null) : (min: (int)sorted.First().Y, max: (int)sorted.Last().Y);
+        int? minY = null;
+        int? maxY = null;
+
+        foreach (var pixel in pixels)
+        {
+            int y = pixel.Y;
+
+            if (minY == null || y < minY)
+            {
+                minY = y;
+            }
+
+            if (maxY == null || y > maxY)
+            {
+                maxY = y;
+            }
+        }
+
+        return (minY, maxY);
     }
 
     protected static (Pixel? start, Pixel? end) GetStartEndXForY(List<Pixel> pixels, int y)
     {
-        var filtered = pixels.Where(p => p.Y == y).OrderBy(p => p.X).ToList();
-        return filtered.Count == 0 ? (start: null, end: null) : (start: filtered.First(), end: filtered.Last());
+        Pixel? start = null;
+        Pixel? end = null;
+
+        foreach (var pixel in pixels)
+        {
+            if (pixel.Y == y)
+            {
+                if (start == null || pixel.X < ((Pixel)start).X)
+                {
+                    start = pixel;
+                }
+
+                if (end == null || pixel.X > ((Pixel)end).X)
+                {
+                    end = pixel;
+                }
+            }
+        }
+
+        return (start, end);
     }
 }
