@@ -37,10 +37,10 @@ namespace ObjViewer.Model.Types
 
         public object Clone()
         {
-            return new Vertex()
+            return new Vertex
             {
-                Coordinates = this.Coordinates,
-                Index = this.Index
+                Coordinates = Coordinates,
+                Index = Index
             };
         }
     }

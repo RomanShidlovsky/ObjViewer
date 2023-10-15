@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ObjViewer.Model.Types
 {
@@ -29,9 +27,8 @@ namespace ObjViewer.Model.Types
             for (int i = 0; i < vcount; i++)
             {
                 string[] parts = data[i+1].Split('/');
-                int index;
 
-                if (!int.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out index))
+                if (!int.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var index))
                 {
                     throw new ArgumentException("Could not parse vertex index as int");
                 }
@@ -53,21 +50,21 @@ namespace ObjViewer.Model.Types
         public override string ToString()
         {
             StringBuilder b = new StringBuilder();
-            b.Append("f");
+            b.Append('f');
 
-            for (int i = 0; i < VertexIndexList.Count(); i++)
+            for (int i = 0; i < VertexIndexList.Count; i++)
             {
                 if (i < TextureIndexList.Count && i < NormalIndexList.Count)
                 {
-                    b.AppendFormat(" {0}/{1}/{2}", VertexIndexList[i], TextureIndexList[i], NormalIndexList[i]);
+                    b.Append($" {VertexIndexList[i]}/{TextureIndexList[i]}/{NormalIndexList[i]}");
                 }
                 else if (i < TextureIndexList.Count)
                 {
-                    b.AppendFormat(" {0}/{1}", VertexIndexList[i], TextureIndexList[i]);
+                    b.Append($" {VertexIndexList[i]}/{TextureIndexList[i]}");
                 }
                 else
                 {
-                    b.AppendFormat(" {0}", VertexIndexList[i]);
+                    b.Append($" {VertexIndexList[i]}");
                 }
             }
 
@@ -76,11 +73,11 @@ namespace ObjViewer.Model.Types
 
         public object Clone()
         {
-            return new Face()
+            return new Face
             {
-                VertexIndexList = new List<int>(this.VertexIndexList),
-                NormalIndexList = new List<int>(this.NormalIndexList),
-                TextureIndexList = new List<int>(this.TextureIndexList)
+                VertexIndexList = new List<int>(VertexIndexList),
+                NormalIndexList = new List<int>(NormalIndexList),
+                TextureIndexList = new List<int>(TextureIndexList)
             };
         }
     }

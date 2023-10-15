@@ -9,25 +9,20 @@ namespace ObjViewer.Model
     public class ModelParams
     {
         private float _scaling;
+
         public float Scaling
         {
-            get 
-            { 
-                return _scaling; 
-            }
-            set 
+            get => _scaling;
+            set
             {
                 if (value > 0.001 && value < 25)
                 {
                     _scaling = value;
                 }
-               
             }
         }
-
-
-        public float ModelYaw { get; set; }
         
+        public float ModelYaw { get; set; }
         public float ModelPitch { get; set; }
         public float ModelRoll { get; set; }
         public float TranslationX { get; set; }
@@ -52,9 +47,10 @@ namespace ObjViewer.Model
         public float DeltaY { get; set; }
 
         public ModelParams(float scaling, float modelYaw, float modelPitch, float modelRoll, float translationX,
-               float translationY, float translationZ, float cameraPositionX, float cameraPositionY, float cameraPositionZ,
-               float cameraYaw, float cameraPitch, float cameraRoll, float fieldOfView, float aspectRatio, float nearPlaneDistance,
-               float farPlaneDistance, float xMin, float yMin, int width, int height)
+            float translationY, float translationZ, float cameraPositionX, float cameraPositionY, float cameraPositionZ,
+            float cameraYaw, float cameraPitch, float cameraRoll, float fieldOfView, float aspectRatio,
+            float nearPlaneDistance,
+            float farPlaneDistance, float xMin, float yMin, int width, int height)
         {
             Scaling = scaling;
             ModelYaw = (float)(modelYaw * Math.PI / 180);

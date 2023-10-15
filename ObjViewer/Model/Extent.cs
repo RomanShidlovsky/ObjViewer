@@ -9,12 +9,12 @@
         public float ZMax { get; set; }
         public float ZMin { get; set; }
 
-        public float XSize { get { return XMax - XMin; } }
-        public float YSize { get { return YMax - YMin; } }
-        public float ZSize { get { return ZMax - ZMin; } }
+        public float XSize => XMax - XMin;
+        public float YSize => YMax - YMin;
+        public float ZSize => ZMax - ZMin;
 
-        public float XCenter { get { return (XMin + XMax) / 2; } }
-        public float YCenter { get { return (YMin + YMax) / 2; } }
-        public float ZCenter { get { return (ZMin + ZMax) / 2; } }
+        public float XCenter => (XMin + XMax) / 2;
+        public float YCenter => (YMin + YMax) / 2;
+        public float ZCenter => (ZMin + ZMax) / 2;
     }
 }

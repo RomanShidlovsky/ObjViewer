@@ -13,11 +13,11 @@ namespace ObjViewer.Model
     {
         public WriteableBitmap Source { get; private set; }
 
-        private nint _backBuffer;
-        private int _backBufferStride;
-        private int _bytesPerPixel;
-        private int _pixelWidth;
-        private int _pixelHeight;
+        private readonly nint _backBuffer;
+        private readonly int _backBufferStride;
+        private readonly int _bytesPerPixel;
+        private readonly int _pixelWidth;
+        private readonly int _pixelHeight;
 
         public Bgra32Bitmap(WriteableBitmap source)
         { 

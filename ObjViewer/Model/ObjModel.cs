@@ -11,10 +11,10 @@ namespace ObjViewer.Model
 {
     public class ObjModel : ICloneable
     {
-        public List<Vertex> VertexList;
-        public List<TextureVertex> TextureVertexList;
-        public List<NormalVertex> NormalVertexList;
-        public List<Face> FaceList;
+        public readonly List<Vertex> VertexList;
+        public readonly List<TextureVertex> TextureVertexList;
+        public readonly List<NormalVertex> NormalVertexList;
+        public readonly List<Face> FaceList;
         public Extent Size { get; set; }
 
         public ObjModel()
@@ -33,10 +33,8 @@ namespace ObjViewer.Model
 
         public void LoadObjFromStream(Stream stream)
         {
-            using (var reader = new StreamReader(stream))
-            {
-                LoadObj(reader.ReadToEnd().Split(Environment.NewLine));
-            }
+            using var reader = new StreamReader(stream);
+            LoadObj(reader.ReadToEnd().Split(Environment.NewLine));
         }
 
         public void LoadObj(IEnumerable<string> data)
@@ -53,40 +51,40 @@ namespace ObjViewer.Model
         {
             string[] parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if (parts.Length > 0)
+            if (parts.Length <= 0)
+                return;
+
+            switch (parts[0])
             {
-                switch (parts[0])
-                {
-                    case "v":
-                        Vertex v = new Vertex();
-                        v.LoadFromStringArray(parts);
-                        VertexList.Add(v);
-                        v.Index = VertexList.Count - 1;
-                        break;
-                    case "vt":
-                        TextureVertex vt = new TextureVertex();
-                        vt.LoadFromStringArray(parts);
-                        TextureVertexList.Add(vt);
-                        vt.Index = TextureVertexList.Count - 1;
-                        break;
-                    case "vn":
-                        NormalVertex vn = new NormalVertex();
-                        vn.LoadFromStringArray(parts);
-                        NormalVertexList.Add(vn);
-                        vn.Index = NormalVertexList.Count - 1;
-                        break;
-                    case "f":
-                        Face f = new Face();
-                        f.LoadFromStringArray(parts);
-                        FaceList.Add(f);
-                        break;
-                }
+                case "v":
+                    Vertex v = new Vertex();
+                    v.LoadFromStringArray(parts);
+                    VertexList.Add(v);
+                    v.Index = VertexList.Count - 1;
+                    break;
+                case "vt":
+                    TextureVertex vt = new TextureVertex();
+                    vt.LoadFromStringArray(parts);
+                    TextureVertexList.Add(vt);
+                    vt.Index = TextureVertexList.Count - 1;
+                    break;
+                case "vn":
+                    NormalVertex vn = new NormalVertex();
+                    vn.LoadFromStringArray(parts);
+                    NormalVertexList.Add(vn);
+                    vn.Index = NormalVertexList.Count - 1;
+                    break;
+                case "f":
+                    Face f = new Face();
+                    f.LoadFromStringArray(parts);
+                    FaceList.Add(f);
+                    break;
             }
         }
 
         public void UpdateSize()
         {
-            if (VertexList.Count== 0)
+            if (VertexList.Count == 0)
             {
                 Size = new Extent
                 {
@@ -113,8 +111,8 @@ namespace ObjViewer.Model
 
         public bool IsPointInObjectRect(double x, double y)
         {
-            return (x > Size.XMin && x < Size.XMax && 
-                y > Size.YMin && y < Size.YMax);
+            return (x > Size.XMin && x < Size.XMax &&
+                    y > Size.YMin && y < Size.YMax);
         }
 
         public object Clone()
@@ -126,18 +124,18 @@ namespace ObjViewer.Model
             clonedObjModel.TextureVertexList.AddRange(this.TextureVertexList.Select(vt => (TextureVertex)vt.Clone()));
 
             clonedObjModel.NormalVertexList.AddRange(this.NormalVertexList.Select(vn => (NormalVertex)vn.Clone()));
-           
+
             clonedObjModel.FaceList.AddRange(this.FaceList.Select(f => (Face)f.Clone()));
 
-            
+
             clonedObjModel.Size = new Extent
             {
-                XMax = this.Size.XMax,
-                XMin = this.Size.XMin,
-                YMax = this.Size.YMax,
-                YMin = this.Size.YMin,
-                ZMax = this.Size.ZMax,
-                ZMin = this.Size.ZMin
+                XMax = Size.XMax,
+                XMin = Size.XMin,
+                YMax = Size.YMax,
+                YMin = Size.YMin,
+                ZMax = Size.ZMax,
+                ZMin = Size.ZMin
             };
 
             return clonedObjModel;
