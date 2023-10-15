@@ -11,7 +11,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Medium"
-        TextElement.FontSize="10"
+        TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -26,6 +26,7 @@
             <Grid
                 x:Name="GridPicture"
                 Grid.Column="0"
+                Grid.ColumnSpan="2"
                 Margin="8"
                 Background="Black"
                 MouseWheel="GridPicture_MouseWheel"
@@ -44,7 +45,8 @@
                 Grid.Column="1"
                 UniformCornerRadius="8"
                 Padding="8"
-                Margin="8 0 0 0">
+                Margin="8 0 0 0"
+                VerticalAlignment="Bottom">
                 <StackPanel>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -67,18 +69,27 @@
                         <Button
                             x:Name="OpenFileButton"
                             Grid.Row="0"
-                            Grid.ColumnSpan="7"
+                            Grid.ColumnSpan="3"
                             Content="Open File"
                             Margin="8"
                             Click="OpenFileButton_Click"/>
+                        
+                        <Button
+                            x:Name="DrawButton"
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Grid.ColumnSpan="4"
+                            Content="Draw"
+                            Margin="8"
+                            Click="DrawButton_Click"/>
                         
                         <StackPanel
                             Grid.Column="0"
                             Grid.Row="2"
                             Grid.ColumnSpan="2"
                             Margin="4">
-                            <RadioButton x:Name="BresenhamRadioButton" IsChecked="True" Content="Bresenham" Click="DrawButton_Click"/>
-                            <RadioButton x:Name="FlatShadingRadioButton" Content="Flat Shading" Click="DrawButton_Click"/>
+                            <RadioButton x:Name="BresenhamRadioButton" IsChecked="True" Content="Bresenham" Click="DrawButton_Click" Margin="4"/>
+                            <RadioButton x:Name="FlatShadingRadioButton" Content="Flat Shading" Click="DrawButton_Click" Margin="4"/>
                         </StackPanel>
                         
                         <StackPanel
@@ -147,7 +158,7 @@
                                     Grid.Column="0"
                                     Grid.Row="1"
                                     Margin="4"/>
-                                <Label
+                                <!--<Label
                                     Content="R"
                                     Grid.Column="1"
                                     Grid.Row="1"
@@ -179,7 +190,15 @@
                                     Text="255"
                                     Grid.Column="6"
                                     Grid.Row="1"
-                                    Margin="4"/>
+                                    Margin="4"/>-->
+                                
+                                <materialDesign:ColorPicker 
+                                    x:Name="ColorPicker"
+                                    Grid.Row="1" 
+                                    Grid.Column="1" 
+                                    Grid.ColumnSpan="6"
+                                    Color = "LawnGreen"
+                                    ColorChanged="DrawButton_Click"/>
                             </Grid>
                         </StackPanel>
                         

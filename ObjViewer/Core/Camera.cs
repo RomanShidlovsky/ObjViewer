@@ -81,5 +81,10 @@ namespace ObjViewer.Core
             SetCameraView(finalPosition, LookAt, UpVector);
             //SetCameraView(new Vector3(finalPosition.X, finalPosition.Y, finalPosition.Z), LookAt, UpVector);
         }
+
+        public static Vector3 GetViewDir(Matrix4x4 viewMatrix)
+        {
+            return -new Vector3(viewMatrix.M31, viewMatrix.M32, viewMatrix.M33);
+        }
     }
 }

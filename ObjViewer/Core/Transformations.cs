@@ -32,14 +32,14 @@ namespace ObjViewer.Core
             }
         }
 
-        private static Matrix4x4 GetWorldMatrix(ModelParams modelParams)
+        public static Matrix4x4 GetWorldMatrix(ModelParams modelParams)
         {
             return Matrix4x4.CreateScale(modelParams.Scaling) *
                 Matrix4x4.CreateFromYawPitchRoll(modelParams.ModelYaw, modelParams.ModelPitch, modelParams.ModelRoll) *
                 Matrix4x4.CreateTranslation(modelParams.TranslationX, modelParams.TranslationY, modelParams.TranslationZ);                             
         }
 
-        private static Matrix4x4 GetViewerMatrix(ModelParams modelParams)
+        public static Matrix4x4 GetViewerMatrix(ModelParams modelParams)
         {
             Vector3 eye = new Vector3(modelParams.CameraPositionX, modelParams.CameraPositionY, modelParams.CameraPositionZ);
             Vector3 lookAt = new Vector3(0, 0, 0);
@@ -55,12 +55,12 @@ namespace ObjViewer.Core
             return camera.ViewMatrix;
         }
 
-        private static Matrix4x4 GetPerspectiveProjectionMatrix(ModelParams modelParams)
+        public static Matrix4x4 GetPerspectiveProjectionMatrix(ModelParams modelParams)
         {
             return Matrix4x4.CreatePerspectiveFieldOfView(modelParams.FieldOfView, modelParams.AspectRatio, modelParams.NearPlaneDistance, modelParams.FarPlaneDistance);
         }
 
-        private static Matrix4x4 GetViewPortMatrix(ModelParams modelParams)
+        public static Matrix4x4 GetViewPortMatrix(ModelParams modelParams)
         {
             return new Matrix4x4(modelParams.Width / 2, 0, 0, 0,
                                  0, -modelParams.Height / 2, 0, 0,
@@ -68,7 +68,7 @@ namespace ObjViewer.Core
                                  modelParams.XMin + (modelParams.Width / 2), modelParams.YMin + (modelParams.Height / 2), 0, 1);
         }
 
-        private static Matrix4x4 GetMVP(ModelParams modelParams)
+        public static Matrix4x4 GetMVP(ModelParams modelParams)
         {
             return GetWorldMatrix(modelParams) * GetViewerMatrix(modelParams) * GetPerspectiveProjectionMatrix(modelParams);
         }

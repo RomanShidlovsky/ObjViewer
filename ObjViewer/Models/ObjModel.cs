@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -59,6 +60,20 @@ public class ObjModel : ICloneable
         }
 
         return result;
+    }
+
+    public bool IsPointInModelRect(double x, double y)
+    {
+        var xValues = Points.Select(p => p.X).ToArray();
+        var yValues = Points.Select(p => p.Y).ToArray();
+
+        float minX = xValues.Min();
+        float maxX = xValues.Max();
+        float minY = yValues.Min();
+        float maxY = yValues.Max();
+
+        return x > minX && x < maxX &&
+               y > minY && y < maxY;
     }
 
     public object Clone()
