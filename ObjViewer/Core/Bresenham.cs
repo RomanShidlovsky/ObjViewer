@@ -48,15 +48,15 @@ public class Bresenham
         DrawSide(face, 0, face.Count - 1, Color);
     }
 
-    protected void DrawSide(List<Vector3> face, int index0, int index1, Color color, List<Pixel>? sidePixels = null)
+    protected void DrawSide(List<Vector3> face, int index0, int index1, Color color)
     {
         Pixel point0 = GetFacePoint(face, index0, color);
         Pixel point1 = GetFacePoint(face, index1, color);
 
-        DrawLine(point0, point1, sidePixels);
+        DrawLine(point0, point1);
     }
 
-    protected virtual void DrawLine(Pixel src, Pixel desc, List<Pixel> sidesPixels = null)
+    protected virtual void DrawLine(Pixel src, Pixel desc)
     {
         Color color = src.Color;
 
@@ -82,7 +82,7 @@ public class Bresenham
         while (p.X != desc.X || p.Y != desc.Y)
         {
             // пиксель внутри окна
-            DrawPixel(p.X, p.Y, curZ, color, sidesPixels);
+            DrawPixel(p.X, p.Y, curZ, color);
 
             int err2 = err * 2;      // модифицированное значение ошибки
 
@@ -101,10 +101,10 @@ public class Bresenham
         }
 
         // отрисовывем последний пиксель
-        DrawPixel(desc.X, desc.Y, desc.Z, color, sidesPixels);
+        DrawPixel(desc.X, desc.Y, desc.Z, color);
     }
 
-    protected virtual void DrawPixel(int x, int y, float z, Color color, List<Pixel>? sidePixels = null)
+    protected virtual void DrawPixel(int x, int y, float z, Color color)
     {
         if (x > 0 && x < Bitmap.PixelWidth &&
             y > 0 && y < Bitmap.PixelHeight &&
