@@ -37,7 +37,7 @@ public static class ObjParser
                 FillLists(line);
             }
 
-            return new ObjModel(points, faces, textures, normals, MakeTriangleFaceList(faces));
+            return new ObjModel(points, faces, textures, normals, TriangulateFaces(faces));
         }
 
         private static void FillLists(string line)
@@ -107,30 +107,26 @@ public static class ObjParser
         {
             return str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         }
-
-        private static List<List<Vector3>> MakeTriangleFaceList(List<List<Vector3>> faces)
+        
+        private static List<List<Vector3>> TriangulateFaces(List<List<Vector3>> faces)
         {
-            List<List<Vector3>> triangleFaces = new();
-            foreach (List<Vector3> face in faces)
+            List<List<Vector3>> triangles = new List<List<Vector3>>();
+
+            foreach (var polygon in faces)
             {
-                if (face.Count < 3)
+                if (polygon.Count < 3)
                 {
-                    throw new ArgumentException("The face should include 2 faces.");
+                    Console.WriteLine("Polygon must have at least 3 vertices.");
+                    return triangles;
                 }
-
-                for (int i = 1; i < face.Count - 1; i++)
+                
+                for (int i = 1; i < polygon.Count - 1; i++)
                 {
-                    List<Vector3> triangleFace = new()
-                    {
-                        face[0],
-                        face[i],
-                        face[i + 1]
-                    };
-
-                    triangleFaces.Add(triangleFace);
+                    List<Vector3> triangle = new List<Vector3> { polygon[0], polygon[i], polygon[i + 1] };
+                    triangles.Add(triangle);
                 }
             }
-
-            return triangleFaces;
+            
+            return triangles;
         }
     }

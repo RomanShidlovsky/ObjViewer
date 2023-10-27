@@ -13,7 +13,8 @@ public class FlatShading : Bresenham
     protected ZBuffer ZBuffer { get; set; }
     public ILighting Lighting { get; set; }
 
-    public FlatShading(Bgra32Bitmap bitmap, ILighting lighting, ObjModel model, Color? color = null) : base(bitmap, model)
+    public FlatShading(Bgra32Bitmap bitmap, ILighting lighting, ObjModel model, Color? color = null) : base(bitmap,
+        model)
     {
         Lighting = lighting;
         ZBuffer = new ZBuffer(Bitmap.PixelWidth, Bitmap.PixelHeight);
@@ -23,15 +24,77 @@ public class FlatShading : Bresenham
     {
         List<Pixel> sidePixels = new List<Pixel>();
         Color color = GetFaceColor(face, Color);
-        
-        for (int i = 0; i < face.Count - 1; i++)
+        Vector3[] points = GetFacePoints(face);
+
+        /*for (int i = 0; i < face.Count - 1; i++)
         {
             DrawSide(face, i, i + 1, color, sidePixels);
         }
 
-        DrawSide(face, 0, face.Count - 1, color, sidePixels);
+        DrawSide(face, 0, face.Count - 1, color, sidePixels);*/
+        
+        ScanlineTriangle(points[0], points[1], points[2], color);
 
-        DrawPixelsInFace(sidePixels);
+        //DrawPixelsInFace(sidePixels);
+    }
+
+    protected virtual Vector3[] GetFacePoints(List<Vector3> face)
+    {
+        Vector3[] points = new Vector3[face.Count];
+
+        for (int i = 0; i < face.Count; i++)
+        {
+            Vector4 point = Model.Points[(int)face[i].X];
+            points[i] = new Vector3(point.X, point.Y, point.Z);
+        }
+
+        return points;
+    }
+    
+    protected virtual void ScanlineTriangle(Vector3 a, Vector3 b, Vector3 c, Color color)
+    {
+        if (a.Y > c.Y) (a, c) = (c, a);
+        if (a.Y > b.Y) (a, b) = (b, a);
+        if (b.Y > c.Y) (b, c) = (c, b);
+        
+        Vector3 kp1 = new Vector3(c.X - a.X, c.Y - a.Y, 0) / (c.Y - a.Y);
+        Vector3 kp2 = new Vector3(b.X - a.X, b.Y - a.Y, 0) / (b.Y - a.Y);
+        Vector3 kp3 = new Vector3(c.X - b.X, c.Y - b.Y, 0) / (c.Y - b.Y);
+
+        int top = int.Max(0, (int)Math.Ceiling(a.Y));
+        int bottom = int.Min(Bitmap.PixelHeight, (int)Math.Ceiling(c.Y));
+
+        for (int y = top; y < bottom; y++)
+        {
+            Vector3 lp = a + (y - a.Y) * kp1;
+            Vector3 rp = y < b.Y ? a + (y - a.Y) * kp2 : b + (y - b.Y) * kp3;
+
+            if (lp.X > rp.X)
+            {
+                (lp, rp) = (rp, lp);
+            }
+            
+            int left = int.Max(0, (int)Math.Ceiling(lp.X));
+            int right = int.Min(Bitmap.PixelWidth, (int)Math.Ceiling(rp.X));
+            
+            float z = lp.Z;
+            float dz = (rp.Z - lp.Z) / Math.Abs((float)(rp.X - lp.X));
+
+            for (int x = left; x < right; x++, z+=dz)
+            {
+                DrawPixel(x, y, z, color);
+            }
+
+        }
+    }
+
+    protected virtual void DrawPixel(int x, int y, float z, Color color)
+    {
+        if (z > 0 && z < 1 && z <= ZBuffer[x, y])
+        {
+            ZBuffer[x, y] = z;
+            Bitmap[x, y] = color;
+        }
     }
 
     protected override void DrawPixel(int x, int y, float z, Color color, List<Pixel>? sidePixels = null)
@@ -88,7 +151,7 @@ public class FlatShading : Bresenham
     {
         if (sidePixels is null)
             return;
-        
+
         (int? minY, int? maxY) = GetMinMaxY(sidePixels);
         if (minY is null || maxY is null)
         {
@@ -96,7 +159,7 @@ public class FlatShading : Bresenham
         }
 
         Color color = sidePixels[0].Color;
-        for (int y = (int)minY; y < maxY; y++) 
+        for (int y = (int)minY; y < maxY; y++)
         {
             (Pixel? startPixel, Pixel? endPixel) = GetStartEndXForY(sidePixels, y);
             if (startPixel is null || endPixel is null)
@@ -110,10 +173,10 @@ public class FlatShading : Bresenham
             float z = start.Z;
             float dz = (end.Z - start.Z) / Math.Abs((float)(end.X - start.X));
 
-            
+
             for (int x = start.X; x < end.X; x++, z += dz)
             {
-                if ((x > 0) && (x < ZBuffer.Width) && 
+                if ((x > 0) && (x < ZBuffer.Width) &&
                     (y > 0) && (y < ZBuffer.Height) &&
                     (z <= ZBuffer[x, y]) && z > 0 && z < 1)
                 {

@@ -29,7 +29,7 @@ public class Bresenham
 
     protected virtual void DrawModel()
     {
-        _ = Parallel.ForEach(Model.Faces, face =>
+        _ = Parallel.ForEach(Model.TriangleFaces, face =>
         {
             if (IsFaceVisible(face))
             {
@@ -116,10 +116,21 @@ public class Bresenham
 
     protected bool IsFaceVisible(List<Vector3> face)
     {
-        return GetFaceNormal(face).Z < 0;
+        Pixel point1 = GetFacePoint(face, 0, Color);
+        Pixel point2 = GetFacePoint(face, 1, Color);
+        Pixel point3 = GetFacePoint(face, 2, Color);
+        
+        Vector2 vector1 = new(point2.X - point1.X,
+            point2.Y - point1.Y);
+
+        Vector2 vector2 = new(point3.X - point1.X,
+            point3.Y - point1.Y);
+
+        float z = vector2.X * vector1.Y - vector2.Y * vector1.X;
+        return true; //z > 0;
     }
 
-    protected Vector3 GetFaceNormal(List<Vector3> face)
+    /*protected Vector3 GetFaceNormal(List<Vector3> face)
     {
         Pixel point1 = GetFacePoint(face, 0, Color);
         Pixel point2 = GetFacePoint(face, 1, Color);
@@ -128,20 +139,18 @@ public class Bresenham
         return GetNormal(point1, point2, point3);
     }
         
-    private static Vector3 GetNormal(Pixel point1, Pixel point2, Pixel point3)
+    private static bool IsVisible(Pixel point1, Pixel point2, Pixel point3)
     {
-        Vector3 vector1 = new(point2.X - point1.X,
-            point2.Y - point1.Y,
-            point2.Z - point1.Z);
+        Vector2 vector1 = new(point2.X - point1.X,
+            point2.Y - point1.Y);
 
-        Vector3 vector2 = new(point3.X - point1.X,
-            point3.Y - point1.Y,
-            point3.Z - point1.Z);
+        Vector2 vector2 = new(point3.X - point1.X,
+            point3.Y - point1.Y);
 
-        Vector3 cross = Vector3.Cross(vector1, vector2);
+        float z = vector2.X * vector1.Y - vector2.Y * vector1.X;
 
-        return Vector3.Normalize(cross);
-    }
+        return z > 0;
+    }*/
 
     protected virtual Pixel GetFacePoint(List<Vector3> face, int i, Color color)
     {
