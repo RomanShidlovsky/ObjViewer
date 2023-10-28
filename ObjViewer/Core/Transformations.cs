@@ -11,6 +11,7 @@ namespace ObjViewer.Core
 {
     public static class Transformations
     {
+        private static readonly Camera _camera = new Camera();
         public static void TransformFromLocalToViewPort(ObjModel model, ModelParams modelParams)
         {
             Matrix4x4 mvpMatrix = GetMVP(modelParams);
@@ -30,6 +31,8 @@ namespace ObjViewer.Core
                     model.Points[i].Z,
                     w);
             }
+            
+            TransformNormal(model, modelParams);
         }
 
         public static Matrix4x4 GetWorldMatrix(ModelParams modelParams)
@@ -45,14 +48,22 @@ namespace ObjViewer.Core
             Vector3 lookAt = new Vector3(0, 0, 0);
             Vector3 upVector = new Vector3(0, 1, 0);
 
-            Camera camera = new Camera(eye, lookAt, upVector, modelParams.Width, modelParams.Height);
+            _camera.SetCameraView(eye, lookAt, upVector, modelParams.Width, modelParams.Height);
             
             if (modelParams.DeltaX != 0 || modelParams.DeltaY != 0) 
             {
-                camera.UpdateCamera(modelParams.DeltaX, modelParams.DeltaY);
+                _camera.UpdateCamera(modelParams.DeltaX, modelParams.DeltaY);
             }
 
-            return camera.ViewMatrix;
+            return _camera.ViewMatrix;
+        }
+        
+        private static void TransformNormal(ObjModel model, ModelParams modelParams)
+        {
+            for (int i = 0; i < model.Normals.Count; i++)
+            {
+                model.Normals[i] = Vector3.Normalize(Vector3.TransformNormal(model.Normals[i], GetWorldMatrix(modelParams)));
+            }
         }
 
         public static Matrix4x4 GetPerspectiveProjectionMatrix(ModelParams modelParams)

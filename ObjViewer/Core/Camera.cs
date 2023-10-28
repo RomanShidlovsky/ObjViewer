@@ -16,6 +16,8 @@ namespace ObjViewer.Core
         public Vector3 UpVector { get; private set; }
         private int _viewPortWidth;
         private int _viewPortHeight;
+        
+        public Camera() {}
 
         public Camera(Vector3 eye, Vector3 lookAt, Vector3 upVector, int viewPortWidth, int viewPortHeight)
         {
@@ -36,6 +38,16 @@ namespace ObjViewer.Core
             Eye = eye;
             LookAt = lookAt;
             UpVector = up;
+            UpdateViewMatrix();
+        }
+        
+        public void SetCameraView(Vector3 eye, Vector3 lookAt, Vector3 up, int viewPortWidth, int viewPortHeight)
+        {
+            Eye = eye;
+            LookAt = lookAt;
+            UpVector = up;
+            _viewPortWidth = viewPortWidth;
+            _viewPortHeight = viewPortHeight;
             UpdateViewMatrix();
         }
 
