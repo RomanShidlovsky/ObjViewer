@@ -12,7 +12,9 @@ public class FlatShading : Bresenham
 {
     protected ZBuffer ZBuffer { get; set; }
     public ILighting Lighting { get; set; }
-
+    
+    public FlatShading() {}
+    
     public FlatShading(Bgra32Bitmap bitmap, ILighting lighting, ObjModel model, Color? color = null) : base(bitmap,
         model)
     {
@@ -20,6 +22,16 @@ public class FlatShading : Bresenham
         ZBuffer = new ZBuffer(Bitmap.PixelWidth, Bitmap.PixelHeight);
     }
 
+    public void SetParams(Bgra32Bitmap bitmap, ILighting lighting, ObjModel model, Color? color = null)
+    {
+        ZBuffer.Reset();
+        Bitmap = bitmap;
+        Lighting = lighting;
+        Model = model;
+        if (color is not null)
+            Color = color.Value;
+    }
+    
     protected override void DrawFace(List<Vector3> face)
     {
         Color color = GetFaceColor(face, Color);
@@ -68,7 +80,7 @@ public class FlatShading : Bresenham
             int right = int.Min(Bitmap.PixelWidth, (int)Math.Ceiling(rp.X));
             
             float z = lp.Z;
-            float dz = (rp.Z - lp.Z) / Math.Abs((float)(rp.X - lp.X));
+            float dz = (rp.Z - lp.Z) / (rp.X - lp.X);
 
             for (int x = left; x < right; x++, z+=dz)
             {

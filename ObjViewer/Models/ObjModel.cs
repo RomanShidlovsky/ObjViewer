@@ -15,13 +15,15 @@ public class ObjModel : ICloneable
     public List<Vector3> Textures { get; set; }
     public List<Vector3> Normals { get; set; }
     public List<Vector4> WorldPoints { get; set; }
+    public List<Vector4> LocalPoints { get; set; }
 
 
     public ObjModel(List<Vector4> points, List<List<Vector3>> faces, List<Vector3> texture, List<Vector3> normal,
         List<List<Vector3>> triangleFaces)
     {
-        Points = points;
+        Points = new List<Vector4>();
         WorldPoints = new List<Vector4>();
+        LocalPoints = points;
         Faces = faces;
         TriangleFaces = triangleFaces;
         Textures = texture;

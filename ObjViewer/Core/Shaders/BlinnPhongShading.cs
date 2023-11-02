@@ -16,7 +16,11 @@ public class BlinnPhongShading : Bresenham
     public Color AmbientColor { get; set; }
     public Color DiffuseColor { get; set; }
     public Color SpecularColor { get; set; }
-    
+
+    public BlinnPhongShading()
+    {
+        ZBuffer = new ZBuffer(Bitmap.PixelWidth, Bitmap.PixelHeight);
+    }
     public BlinnPhongShading(
         Bgra32Bitmap bitmap, 
         ILighting lighting, 
@@ -29,7 +33,10 @@ public class BlinnPhongShading : Bresenham
 
     public void SetParams(Bgra32Bitmap bitmap, ILighting lighting, ObjModel objModel)
     {
-        
+        ZBuffer.Reset();
+        Bitmap = bitmap;
+        Model = objModel;
+        Lighting = lighting;
     }
     
     protected override void DrawFace(List<Vector3> face)

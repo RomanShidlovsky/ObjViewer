@@ -15,7 +15,15 @@ public class Bresenham
     protected Bgra32Bitmap Bitmap { get; set; }
     protected Color Color { get; set; } = Colors.White;
 
+    public Bresenham() { }
+
     public Bresenham(Bgra32Bitmap bitmap, ObjModel model)
+    {
+        Bitmap = bitmap;
+        Model = model;
+    }
+
+    public void SetParams(Bgra32Bitmap bitmap, ObjModel model)
     {
         Bitmap = bitmap;
         Model = model;
@@ -29,14 +37,6 @@ public class Bresenham
 
     public virtual void DrawModel()
     {
-        /*_ = Parallel.ForEach(Model.TriangleFaces, face =>
-        {
-            if (IsFaceVisible(face))
-            {
-                DrawFace(face);
-            }
-        });*/
-
         foreach (var face in Model.TriangleFaces)
         {
             if (IsFaceVisible(face))

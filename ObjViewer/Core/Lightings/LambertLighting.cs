@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Numerics;
 using System.Windows.Media;
+using ObjViewer.Models;
 
 namespace ObjViewer.Core.Lightings;
 
 public class LambertLighting : ILighting
 {
-    private readonly Vector3 _lightVector;
+    private Vector3 _lightVector;
 
     public LambertLighting(Vector3 lightVector)
+    {
+        _lightVector = lightVector;
+    }
+
+    public void SetLightVector(Vector3 lightVector)
     {
         _lightVector = lightVector;
     }

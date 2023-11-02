@@ -22,7 +22,7 @@ namespace ObjViewer
     public partial class MainWindow : Window
     {
         private ObjModel model;
-        private ObjModel modelMain;
+        //private ObjModel modelMain;
         private int width, height;
 
         private ModelParams _modelParams;
@@ -34,6 +34,11 @@ namespace ObjViewer
         private bool _isDragging = false;
         private bool _cameraMoving = false;
         private Point _startPosition;
+        private Bresenham? _bresenham = null;
+        private LambertLighting? _lambertLighting = null;
+        private FlatShading? _flatShading = null;
+        private BlinnPhongShading? _blinnPhongShader = null;
+        private BlinnPhongLighting? _blinnPhongLighting = null;
         private readonly CultureInfo _cultureInfo = CultureInfo.InvariantCulture;
 
         public MainWindow()
@@ -55,7 +60,7 @@ namespace ObjViewer
                 {
                     string[] fileLines = File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8);
                     model = ObjParser.Parse(fileLines);
-
+                    
                     int width = (int)GridPicture.ActualWidth;
                     int height = (int)GridPicture.ActualHeight;
                     _modelParams = new ModelParams(
@@ -120,36 +125,82 @@ namespace ObjViewer
                 WriteableBitmap source = new(width, height, 96, 96, PixelFormats.Bgra32, null);
                 Bgra32Bitmap bitmap = new(source);
 
-                modelMain = model.Clone() as ObjModel;
-                Transformations.TransformFromLocalToViewPort(modelMain, _modelParams);
-
-
+                
+                Transformations.TransformFromLocalToViewPort(model, _modelParams);
+                
                 Color color = ColorPicker.Color;
 
                 if (BresenhamRadioButton.IsChecked is true)
                 {
-                    Bresenham bresenham = new(bitmap, modelMain);
-                    bresenham.DrawModel(color);
+                    if (_bresenham is null)
+                    {
+                        _bresenham = new(bitmap, model);
+                    }
+                    else
+                    {
+                        _bresenham.SetParams(bitmap, model);
+                    }
+                    
+                    _bresenham.DrawModel(color);
                 }
                 else if (FlatShadingRadioButton.IsChecked is true)
                 {
-                    LambertLighting lighting = new LambertLighting(GetLightingVectorFromTextBox());
-                    FlatShading shader = new FlatShading(bitmap, lighting, modelMain);
-                    shader.DrawModel(color);
+                    if (_lambertLighting is null)
+                    {
+                        _lambertLighting = new LambertLighting(GetLightingVectorFromTextBox());
+                    }
+                    else
+                    {
+                        _lambertLighting.SetLightVector(GetLightingVectorFromTextBox());
+                    }
+
+                    if (_flatShading is null)
+                    {
+                        _flatShading = new FlatShading(bitmap, _lambertLighting, model);
+                    }
+                    else
+                    {
+                        _flatShading.SetParams(bitmap, _lambertLighting, model);
+                    }
+                    
+                    _flatShading.DrawModel(color);
                 }
                 else if (BlinnPhongRadioButton.IsChecked is true)
                 {
-                    BlinnPhongLighting lighting = new BlinnPhongLighting(GetLightingVectorFromTextBox(),
-                        new Vector3(_modelParams.CameraPositionX, _modelParams.CameraPositionY, _modelParams.CameraPositionZ),
-                        (float)AmbientIntensitySlider.Value ,
-                        (float)DiffuseIntensitySlider.Value,
-                        (float)SpecularIntensitySlider.Value,
-                        (float)ShineIntensitySlider.Value,
-                        new Vector3(color.R / 255f, color.G / 255f, color.B/ 255f),
-                        new Vector3(1, 1, 1));
+                    if (_blinnPhongLighting == null)
+                    {
+                        _blinnPhongLighting = new BlinnPhongLighting(GetLightingVectorFromTextBox(),
+                            new Vector3(_modelParams.CameraPositionX, _modelParams.CameraPositionY,
+                                _modelParams.CameraPositionZ),
+                            (float)AmbientIntensitySlider.Value,
+                            (float)DiffuseIntensitySlider.Value,
+                            (float)SpecularIntensitySlider.Value,
+                            (float)ShineIntensitySlider.Value,
+                            new Vector3(color.R / 255f, color.G / 255f, color.B / 255f),
+                            new Vector3(1, 1, 1));
+                    }
+                    else
+                    {
+                        _blinnPhongLighting.SetParams(GetLightingVectorFromTextBox(),
+                            new Vector3(_modelParams.CameraPositionX, _modelParams.CameraPositionY, _modelParams.CameraPositionZ),
+                            (float)AmbientIntensitySlider.Value ,
+                            (float)DiffuseIntensitySlider.Value,
+                            (float)SpecularIntensitySlider.Value,
+                            (float)ShineIntensitySlider.Value,
+                            new Vector3(color.R / 255f, color.G / 255f, color.B/ 255f),
+                            new Vector3(1, 1, 1));
+                    }
 
-                    BlinnPhongShading shader = new BlinnPhongShading(bitmap, lighting, modelMain);
-                    shader.DrawModel(color);
+                    if (_blinnPhongShader == null)
+                    {
+                        _blinnPhongShader = new BlinnPhongShading(bitmap, _blinnPhongLighting, model);
+                    }
+                    else
+                    {
+                        _blinnPhongShader.SetParams(bitmap, _blinnPhongLighting, model);
+                    }
+
+                    _blinnPhongShader.DrawModel(color);
                 }
 
                 Picture.Source = bitmap.Source;
@@ -176,12 +227,12 @@ namespace ObjViewer
 
         private void GridPicture_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (modelMain is null)
+            if (model is null)
                 return;
 
             Point p = e.GetPosition(Picture);
 
-            if (modelMain.IsPointInModelRect(p.X, p.Y))
+            if (model.IsPointInModelRect(p.X, p.Y))
             {
                 _isDragging = true;
                 _startPosition = p;

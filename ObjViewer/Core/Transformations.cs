@@ -16,12 +16,39 @@ namespace ObjViewer.Core
         {
             Matrix4x4 mvpMatrix = GetMVP(modelParams);
             float w;
+            model.WorldPoints.Clear();
+            model.Points.Clear();
+            
+            for (int i = 0; i < model.LocalPoints.Count; i++)
+            {
+                model.WorldPoints.Add(Vector4.Transform(model.LocalPoints[i], GetWorldMatrix(modelParams)));
+
+                var point = Vector4.Transform(model.LocalPoints[i], mvpMatrix);
+                
+                w = point.W;
+                point /= w;
+
+                point = Vector4.Transform(point, GetViewPortMatrix(modelParams));
+                point = new Vector4(
+                    point.X,
+                    point.Y,
+                    point.Z,
+                    w);
+                
+                model.Points.Add(point);
+            }
+            
+            TransformNormal(model, modelParams);
+        }
+        
+        public static void TransformFromWorldToViewPort(ObjModel model, ModelParams modelParams)
+        {
+            Matrix4x4 vpMatrix = GetVP(modelParams);
+            float w;
 
             for (int i = 0; i < model.Points.Count; i++)
             {
-                model.WorldPoints.Add(Vector4.Transform(model.Points[i], GetWorldMatrix(modelParams)));
-                model.Points[i] = Vector4.Transform(model.Points[i], mvpMatrix);
-                
+                model.Points[i] = Vector4.Transform(model.WorldPoints[i], vpMatrix);
                 
                 w = model.Points[i].W;
                 model.Points[i] /= w;
@@ -90,6 +117,11 @@ namespace ObjViewer.Core
         {
             return Matrix4x4.CreateFromYawPitchRoll(modelParams.ModelYaw, modelParams.ModelPitch,
                 modelParams.ModelRoll);
+        }
+
+        public static Matrix4x4 GetVP(ModelParams modelParams)
+        {
+            return GetViewerMatrix(modelParams) * GetPerspectiveProjectionMatrix(modelParams);
         }
     }
 }
