@@ -86,11 +86,26 @@
                         <StackPanel
                             Grid.Column="0"
                             Grid.Row="2"
-                            Grid.ColumnSpan="2"
+                            Grid.ColumnSpan="5"
                             Margin="4">
-                            <RadioButton x:Name="BresenhamRadioButton" IsChecked="True" Content="Bresenham" Click="DrawButton_Click" Margin="4"/>
-                            <RadioButton x:Name="FlatShadingRadioButton" Content="Flat Shading" Click="DrawButton_Click" Margin="4"/>
+                            
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Row="0" Grid.Column="0" x:Name="BresenhamRadioButton" IsChecked="True" Content="Bresenham" Click="DrawButton_Click" Margin="4"/>
+                                <RadioButton Grid.Row="1" Grid.Column="0"  x:Name="FlatShadingRadioButton" Content="Flat Shading" Click="DrawButton_Click" Margin="4"/>
+                                <RadioButton Grid.Row="2" Grid.Column="0" x:Name="BlinnPhongRadioButton" Content="Blinn-Phong" Click="DrawButton_Click" Margin="4"/>
+                            </Grid>
                         </StackPanel>
+                        
+                       
                         
                         <StackPanel
                             Grid.Row="3"
@@ -98,6 +113,8 @@
                             Grid.ColumnSpan="7">
                             <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -115,7 +132,7 @@
                                 </Grid.ColumnDefinitions> 
                                 
                                 <Label 
-                                    Content="Light Vector" 
+                                    Content="Light Position" 
                                     Grid.Column="0"
                                     Grid.Row="0"
                                     Margin="4"/>
@@ -148,7 +165,7 @@
                                     Margin="4"/>
                                 <TextBox
                                     x:Name="LightVectorZTextBox"
-                                    Text="1"
+                                    Text="100"
                                     Grid.Column="6"
                                     Grid.Row="0"
                                     Margin="4"/>
@@ -158,40 +175,6 @@
                                     Grid.Column="0"
                                     Grid.Row="1"
                                     Margin="4"/>
-                                <!--<Label
-                                    Content="R"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    Margin="4"/>
-                                <TextBox
-                                    x:Name="ColorRTextBox"
-                                    Text="255"
-                                    Grid.Column="2"
-                                    Grid.Row="1"
-                                    Margin="4"/>
-                                <Label 
-                                    Content="G" 
-                                    Grid.Column="3"
-                                    Grid.Row="1"
-                                    Margin="4"/>
-                                <TextBox
-                                    x:Name="ColorGTextBox"
-                                    Text="255"
-                                    Grid.Column="4"
-                                    Grid.Row="1"
-                                    Margin="4"/>
-                                <Label 
-                                    Content="B" 
-                                    Grid.Column="5"
-                                    Grid.Row="1"
-                                    Margin="4"/>
-                                <TextBox
-                                    x:Name="ColorBTextBox"
-                                    Text="255"
-                                    Grid.Column="6"
-                                    Grid.Row="1"
-                                    Margin="4"/>-->
-                                
                                 <materialDesign:ColorPicker 
                                     x:Name="ColorPicker"
                                     Grid.Row="1" 
@@ -199,6 +182,67 @@
                                     Grid.ColumnSpan="6"
                                     Color = "LawnGreen"
                                     ColorChanged="DrawButton_Click"/>
+                                
+                                <Label
+                                    Content="Ambient Intensity"
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <Slider 
+                                    x:Name="AmbientIntensitySlider"
+                                    ValueChanged="DrawButton_Click"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="6"
+                                    Margin="4"
+                                    Minimum="0"
+                                    Maximum="1"
+                                    Value="0.0002"/>
+                                <Label
+                                    Content="Diffuse Intensity"
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <Slider 
+                                    x:Name="DiffuseIntensitySlider"
+                                    ValueChanged="DrawButton_Click"
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="6"
+                                    Margin="4"
+                                    Minimum="0"
+                                    Maximum="1"
+                                    Value="0.9"/>
+                                <Label
+                                    Content="Specular Intensity"
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <Slider 
+                                    x:Name="SpecularIntensitySlider"
+                                    ValueChanged="DrawButton_Click"
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="6"
+                                    Margin="4"
+                                    Minimum="0"
+                                    Maximum="1"
+                                    Value="0.9"/>
+                                <Label
+                                    Content="Shine Intensity"
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <Slider 
+                                    x:Name="ShineIntensitySlider"
+                                    ValueChanged="DrawButton_Click"
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="6"
+                                    Margin="4"
+                                    Minimum="0.1"
+                                    Maximum="100"
+                                    Value="64"/>
                             </Grid>
                         </StackPanel>
                         

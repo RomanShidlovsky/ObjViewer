@@ -24,7 +24,9 @@ namespace ObjViewer
         private ObjModel model;
         private ObjModel modelMain;
         private int width, height;
+
         private ModelParams _modelParams;
+
         /*private Bgra32Bitmap _bitmap;
         private Bresenham _bresenham;
         private FlatShading _flatShading;
@@ -53,37 +55,37 @@ namespace ObjViewer
                 {
                     string[] fileLines = File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8);
                     model = ObjParser.Parse(fileLines);
-                    
+
                     int width = (int)GridPicture.ActualWidth;
                     int height = (int)GridPicture.ActualHeight;
                     _modelParams = new ModelParams(
-                                scaling: 0.1f,
-                                modelYaw: 0,
-                                modelPitch: 0,
-                                modelRoll: 0,
-                                translationX: 0,
-                                translationY: 0,
-                                translationZ: 0,
-                                cameraPositionX: 0,
-                                cameraPositionY: 0,
-                                cameraPositionZ: 10,
-                                cameraYaw: 0,
-                                cameraPitch: 0,
-                                cameraRoll: 0,
-                                fieldOfView: 60,
-                                aspectRatio: (float)width / height,
-                                nearPlaneDistance: 0.1f,
-                                farPlaneDistance: 100f,
-                                xMin: 0,
-                                yMin: 0,
-                                width: width,
-                                height: height);
+                        scaling: 0.1f,
+                        modelYaw: 0,
+                        modelPitch: 0,
+                        modelRoll: 0,
+                        translationX: 0,
+                        translationY: 0,
+                        translationZ: 0,
+                        cameraPositionX: 0,
+                        cameraPositionY: 0,
+                        cameraPositionZ: 10,
+                        cameraYaw: 0,
+                        cameraPitch: 0,
+                        cameraRoll: 0,
+                        fieldOfView: 60,
+                        aspectRatio: (float)width / height,
+                        nearPlaneDistance: 0.1f,
+                        farPlaneDistance: 100f,
+                        xMin: 0,
+                        yMin: 0,
+                        width: width,
+                        height: height);
                     //WriteableBitmap source = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
                     /*_bitmap = new Bgra32Bitmap(source);
                     _bresenham = new Bresenham(_bitmap);*/
-                   // LambertLighting lighting = new LambertLighting(GetLightingVectorFromTextBox());
+                    // LambertLighting lighting = new LambertLighting(GetLightingVectorFromTextBox());
                     //_flatShading = new FlatShading(_bitmap, lighting, GetColorFromTextBox());
-                    
+
 
                     DrawModel();
                 }
@@ -100,7 +102,7 @@ namespace ObjViewer
 
         private Vector3 GetLightingVectorFromTextBox()
         {
-            return new Vector3(
+            return 100 * new Vector3(
                 int.Parse(LightVectorXTextBox.Text, _cultureInfo),
                 int.Parse(LightVectorYTextBox.Text, _cultureInfo),
                 int.Parse(LightVectorZTextBox.Text, _cultureInfo));
@@ -108,7 +110,7 @@ namespace ObjViewer
 
         private void DrawModel()
         {
-            if (model is null) 
+            if (model is null)
                 return;
 
             try
@@ -123,7 +125,7 @@ namespace ObjViewer
 
 
                 Color color = ColorPicker.Color;
-                
+
                 if (BresenhamRadioButton.IsChecked is true)
                 {
                     Bresenham bresenham = new(bitmap, modelMain);
@@ -135,7 +137,21 @@ namespace ObjViewer
                     FlatShading shader = new FlatShading(bitmap, lighting, modelMain);
                     shader.DrawModel(color);
                 }
-                
+                else if (BlinnPhongRadioButton.IsChecked is true)
+                {
+                    BlinnPhongLighting lighting = new BlinnPhongLighting(GetLightingVectorFromTextBox(),
+                        new Vector3(_modelParams.CameraPositionX, _modelParams.CameraPositionY, _modelParams.CameraPositionZ),
+                        (float)AmbientIntensitySlider.Value ,
+                        (float)DiffuseIntensitySlider.Value,
+                        (float)SpecularIntensitySlider.Value,
+                        (float)ShineIntensitySlider.Value,
+                        new Vector3(color.R / 255f, color.G / 255f, color.B/ 255f),
+                        new Vector3(1, 1, 1));
+
+                    BlinnPhongShading shader = new BlinnPhongShading(bitmap, lighting, modelMain);
+                    shader.DrawModel(color);
+                }
+
                 Picture.Source = bitmap.Source;
             }
             catch (Exception e)
@@ -151,7 +167,7 @@ namespace ObjViewer
 
         private void GridPicture_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (model is null) 
+            if (model is null)
                 return;
             //_modelParams.ModelYaw += (float)(e.Delta/100 * Math.PI / 180) ;
             _modelParams.Scaling += (float)e.Delta / 1000;
@@ -160,11 +176,11 @@ namespace ObjViewer
 
         private void GridPicture_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-           if (modelMain is null)
-               return;
-            
+            if (modelMain is null)
+                return;
+
             Point p = e.GetPosition(Picture);
-            
+
             if (modelMain.IsPointInModelRect(p.X, p.Y))
             {
                 _isDragging = true;
@@ -207,8 +223,6 @@ namespace ObjViewer
 
         private void GridPicture_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-          
-            
             Point p = e.GetPosition(Picture);
 
             _cameraMoving = true;

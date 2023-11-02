@@ -29,6 +29,17 @@ public class ZBuffer
         }
     }
 
+    public void Reset()
+    {
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                _buffer[i, j] = double.MaxValue;
+            }
+        }
+    }
+
     private bool IsValidCoordinate(int x, int y)
     {
         return x >= 0 && x <= Width && y >= 0 && y <= Height;

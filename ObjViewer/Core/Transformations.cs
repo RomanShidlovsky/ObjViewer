@@ -19,8 +19,10 @@ namespace ObjViewer.Core
 
             for (int i = 0; i < model.Points.Count; i++)
             {
+                model.WorldPoints.Add(Vector4.Transform(model.Points[i], GetWorldMatrix(modelParams)));
                 model.Points[i] = Vector4.Transform(model.Points[i], mvpMatrix);
-
+                
+                
                 w = model.Points[i].W;
                 model.Points[i] /= w;
 
@@ -62,7 +64,7 @@ namespace ObjViewer.Core
         {
             for (int i = 0; i < model.Normals.Count; i++)
             {
-                model.Normals[i] = Vector3.Normalize(Vector3.TransformNormal(model.Normals[i], GetWorldMatrix(modelParams)));
+                model.Normals[i] = Vector3.Normalize(Vector3.TransformNormal(model.Normals[i], GetNormalMatrix(modelParams)));
             }
         }
 
@@ -82,6 +84,12 @@ namespace ObjViewer.Core
         public static Matrix4x4 GetMVP(ModelParams modelParams)
         {
             return GetWorldMatrix(modelParams) * GetViewerMatrix(modelParams) * GetPerspectiveProjectionMatrix(modelParams);
+        }
+
+        public static Matrix4x4 GetNormalMatrix(ModelParams modelParams)
+        {
+            return Matrix4x4.CreateFromYawPitchRoll(modelParams.ModelYaw, modelParams.ModelPitch,
+                modelParams.ModelRoll);
         }
     }
 }

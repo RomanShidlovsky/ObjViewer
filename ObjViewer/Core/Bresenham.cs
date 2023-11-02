@@ -27,15 +27,23 @@ public class Bresenham
         DrawModel();
     }
 
-    protected virtual void DrawModel()
+    public virtual void DrawModel()
     {
-        _ = Parallel.ForEach(Model.TriangleFaces, face =>
+        /*_ = Parallel.ForEach(Model.TriangleFaces, face =>
         {
             if (IsFaceVisible(face))
             {
                 DrawFace(face);
             }
-        });
+        });*/
+
+        foreach (var face in Model.TriangleFaces)
+        {
+            if (IsFaceVisible(face))
+            {
+                DrawFace(face);
+            }
+        }
     }
 
     protected virtual void DrawFace(List<Vector3> face)

@@ -13,7 +13,7 @@ public class LambertLighting : ILighting
         _lightVector = lightVector;
     }
 
-    public Color GetPointColor(Vector3 normalVector, Color color)
+    public Color GetPointColor(Vector3 normalVector, Color color, Vector3? point = null)
     {
         double k = Math.Max(Vector3.Dot(normalVector, Vector3.Normalize(_lightVector)), 0);
 
