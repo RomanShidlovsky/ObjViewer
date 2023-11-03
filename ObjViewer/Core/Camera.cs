@@ -89,7 +89,8 @@ namespace ObjViewer.Core
 
             Vector4 newPosition = Vector4.Transform(new Vector4(zAxis, 1.0f), rotationMatrix);
             Vector3 finalPosition = pivot + new Vector3(newPosition.X, newPosition.Y, newPosition.Z);
-
+            Eye = finalPosition;
+            
             SetCameraView(finalPosition, LookAt, UpVector);
             //SetCameraView(new Vector3(finalPosition.X, finalPosition.Y, finalPosition.Z), LookAt, UpVector);
         }

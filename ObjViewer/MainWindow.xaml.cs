@@ -107,7 +107,7 @@ namespace ObjViewer
 
         private Vector3 GetLightingVectorFromTextBox()
         {
-            return 100 * new Vector3(
+            return new Vector3(
                 int.Parse(LightVectorXTextBox.Text, _cultureInfo),
                 int.Parse(LightVectorYTextBox.Text, _cultureInfo),
                 int.Parse(LightVectorZTextBox.Text, _cultureInfo));
@@ -128,7 +128,7 @@ namespace ObjViewer
                 
                 Transformations.TransformFromLocalToViewPort(model, _modelParams);
                 
-                Color color = ColorPicker.Color;
+                Color color = ModelColorPicker.SelectedColor!.Value;
 
                 if (BresenhamRadioButton.IsChecked is true)
                 {
@@ -167,6 +167,9 @@ namespace ObjViewer
                 }
                 else if (BlinnPhongRadioButton.IsChecked is true)
                 {
+                    Color lightColor = LightColorPicker.SelectedColor!.Value;
+                    Color specColor = SpecularColorPicker.SelectedColor!.Value;
+                    
                     if (_blinnPhongLighting == null)
                     {
                         _blinnPhongLighting = new BlinnPhongLighting(GetLightingVectorFromTextBox(),
@@ -177,18 +180,22 @@ namespace ObjViewer
                             (float)SpecularIntensitySlider.Value,
                             (float)ShineIntensitySlider.Value,
                             new Vector3(color.R / 255f, color.G / 255f, color.B / 255f),
-                            new Vector3(1, 1, 1));
+                            new Vector3(specColor.R / 255f, specColor.G / 255f, specColor.B / 255f),
+                            (float)LightIntensitySlider.Value,
+                            new Vector3(lightColor.R / 255f, lightColor.G / 255f, lightColor.B / 255f));
                     }
                     else
                     {
                         _blinnPhongLighting.SetParams(GetLightingVectorFromTextBox(),
-                            new Vector3(_modelParams.CameraPositionX, _modelParams.CameraPositionY, _modelParams.CameraPositionZ),
+                            Transformations._camera.Eye,
                             (float)AmbientIntensitySlider.Value ,
                             (float)DiffuseIntensitySlider.Value,
                             (float)SpecularIntensitySlider.Value,
                             (float)ShineIntensitySlider.Value,
                             new Vector3(color.R / 255f, color.G / 255f, color.B/ 255f),
-                            new Vector3(1, 1, 1));
+                            new Vector3(specColor.R / 255f, specColor.G / 255f, specColor.B / 255f),
+                            (float)LightIntensitySlider.Value,
+                            new Vector3(lightColor.R / 255f, lightColor.G / 255f, lightColor.B / 255f));
                     }
 
                     if (_blinnPhongShader == null)

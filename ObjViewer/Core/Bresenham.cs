@@ -135,7 +135,7 @@ public class Bresenham
             point3.Y - point1.Y);
 
         float z = vector2.X * vector1.Y - vector2.Y * vector1.X;
-        return true; //z > 0;
+        return z > 0;
     }
 
     /*protected Vector3 GetFaceNormal(List<Vector3> face)

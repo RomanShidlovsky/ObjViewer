@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas/xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ObjViewer"
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="Obj Viewer" Height="800" Width="1000"
         MinHeight="600" MinWidth="900"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="13"
@@ -119,10 +121,13 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                     
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="4*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -165,7 +170,7 @@
                                     Margin="4"/>
                                 <TextBox
                                     x:Name="LightVectorZTextBox"
-                                    Text="100"
+                                    Text="5"
                                     Grid.Column="6"
                                     Grid.Row="0"
                                     Margin="4"/>
@@ -175,13 +180,15 @@
                                     Grid.Column="0"
                                     Grid.Row="1"
                                     Margin="4"/>
-                                <materialDesign:ColorPicker 
-                                    x:Name="ColorPicker"
+                                <toolkit:ColorPicker 
                                     Grid.Row="1" 
+                                    Grid.ColumnSpan="6" 
+                                    x:Name="ModelColorPicker" 
                                     Grid.Column="1" 
-                                    Grid.ColumnSpan="6"
-                                    Color = "LawnGreen"
-                                    ColorChanged="DrawButton_Click"/>
+                                    DisplayColorAndName="True" 
+                                    AvailableColorsSortingMode="HueSaturationBrightness" 
+                                    SelectedColor="Green"
+                                    SelectedColorChanged="DrawButton_Click"/>
                                 
                                 <Label
                                     Content="Ambient Intensity"
@@ -241,8 +248,51 @@
                                     Grid.ColumnSpan="6"
                                     Margin="4"
                                     Minimum="0.1"
+                                    Maximum="1000"
+                                    Value="64"/>
+                                <Label
+                                    Content="Light Intensity"
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <Slider 
+                                    x:Name="LightIntensitySlider"
+                                    ValueChanged="DrawButton_Click"
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="6"
+                                    Margin="4"
+                                    Minimum="0"
                                     Maximum="100"
                                     Value="64"/>
+                                <Label
+                                    Content="Light Color"
+                                    Grid.Row="7"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <toolkit:ColorPicker 
+                                    Grid.Row="7" 
+                                    Grid.ColumnSpan="6" 
+                                    x:Name="LightColorPicker" 
+                                    Grid.Column="1" 
+                                    DisplayColorAndName="True" 
+                                    AvailableColorsSortingMode="HueSaturationBrightness" 
+                                    SelectedColor="White"
+                                    SelectedColorChanged="DrawButton_Click"/> 
+                                <Label
+                                    Content="Specular Color"
+                                    Grid.Row="8"
+                                    Grid.Column="0"
+                                    Margin="4"/>
+                                <toolkit:ColorPicker 
+                                    Grid.Row="8" 
+                                    Grid.ColumnSpan="6" 
+                                    x:Name="SpecularColorPicker" 
+                                    Grid.Column="1" 
+                                    DisplayColorAndName="True" 
+                                    AvailableColorsSortingMode="HueSaturationBrightness" 
+                                    SelectedColor="White"
+                                    SelectedColorChanged="DrawButton_Click"/> 
                             </Grid>
                         </StackPanel>
                         

@@ -11,7 +11,7 @@ namespace ObjViewer.Core
 {
     public static class Transformations
     {
-        private static readonly Camera _camera = new Camera();
+        public static readonly Camera _camera = new Camera();
         public static void TransformFromLocalToViewPort(ObjModel model, ModelParams modelParams)
         {
             Matrix4x4 mvpMatrix = GetMVP(modelParams);
